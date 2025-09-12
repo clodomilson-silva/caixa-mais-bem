@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../../models/mood_entry.dart';
 import '../../../services/mood_repository.dart';
+import '../../../core/constants.dart';
 import 'quick_mood_entry_screen.dart';
 import 'mood_history_screen_simple.dart' as history;
 import 'mood_insights_screen.dart';
 import 'weekly_reflection_screen.dart';
+import '../breathing/breathing_screen.dart';
+import '../exercises/exercises_screen.dart';
 
 class DiaryScreen extends StatefulWidget {
   const DiaryScreen({super.key});
@@ -240,7 +243,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               'Sequência',
               '$_currentStreak dias',
               Icons.local_fire_department,
-              const Color(0xFFFF7043),
+              AppColors.energy,
             ),
           ),
           const SizedBox(width: 12),
@@ -249,7 +252,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               'Registros',
               '${_stats['totalEntries'] ?? 0}',
               Icons.book,
-              const Color(0xFF4CAF50),
+              AppColors.primary,
             ),
           ),
           const SizedBox(width: 12),
@@ -258,7 +261,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               'Humor Médio',
               '${(_stats['averageMood'] ?? 0.0).toStringAsFixed(1)}/10',
               Icons.mood,
-              const Color(0xFF2196F3),
+              AppColors.serenity,
             ),
           ),
         ],
@@ -273,34 +276,50 @@ class _DiaryScreenState extends State<DiaryScreen> {
     Color color,
   ) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.white, color.withOpacity(0.02)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(0.15), width: 1),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
+            color: color.withOpacity(0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 24),
+          ),
+          const SizedBox(height: 12),
           Text(
             value,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
           Text(
             title,
-            style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+            style: TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -386,34 +405,94 @@ class _DiaryScreenState extends State<DiaryScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Explorar',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF2E2E2E),
-            ),
+          Row(
+            children: [
+              Icon(Icons.spa, color: AppColors.primary, size: 24),
+              const SizedBox(width: 8),
+              const Text(
+                'Ações de Bem-estar',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          // Primeira linha - Ações principais de bem-estar
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionCard(
+                  'Respiração',
+                  'Técnicas de relaxamento',
+                  Icons.air,
+                  AppColors.serenity,
+                  () => _navigateToBreathing(),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildActionCard(
+                  'Exercícios',
+                  'Atividades físicas',
+                  Icons.fitness_center,
+                  AppColors.energy,
+                  () => _navigateToExercises(),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
+
+          // Segunda linha - Análise e histórico
           Row(
             children: [
               Expanded(
                 child: _buildActionCard(
                   'Histórico',
                   'Ver registros anteriores',
-                  Icons.history,
-                  const Color(0xFF2196F3),
+                  Icons.timeline,
+                  AppColors.balance,
                   () => _navigateToHistory(),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: _buildActionCard(
+                  'Insights',
+                  'Análise do seu humor',
+                  Icons.psychology,
+                  AppColors.vitality,
+                  () => _navigateToInsights(),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+
+          // Terceira linha - Reflexão e configurações
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionCard(
                   'Reflexão',
                   'Perguntas semanais',
-                  Icons.quiz,
-                  const Color(0xFF9C27B0),
+                  Icons.self_improvement,
+                  AppColors.peace,
                   () => _navigateToWeeklyReflection(),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildActionCard(
+                  'Alertas',
+                  'Configurar pausas',
+                  Icons.notifications_active,
+                  AppColors.mindfulness,
+                  () => _navigateToAlerts(),
                 ),
               ),
             ],
@@ -430,40 +509,67 @@ class _DiaryScreenState extends State<DiaryScreen> {
     Color color,
     VoidCallback onTap,
   ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          print('DEBUG: Botão "$title" clicado');
+          onTap();
+        },
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
             ),
-          ],
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: color, size: 32),
-            const SizedBox(height: 8),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: color,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: color.withOpacity(0.2), width: 1),
+            boxShadow: [
+              BoxShadow(
+                color: color.withOpacity(0.15),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              subtitle,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              textAlign: TextAlign.center,
-            ),
-          ],
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: color.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: color, size: 28),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: color,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textSecondary,
+                  height: 1.3,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -563,10 +669,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
   }
 
   Color _getMoodColor(int mood) {
-    if (mood <= 3) return const Color(0xFFE53935);
-    if (mood <= 5) return const Color(0xFFFF9800);
-    if (mood <= 7) return const Color(0xFF4CAF50);
-    return const Color(0xFF2E7D32);
+    if (mood <= 3) return AppColors.error;
+    if (mood <= 5) return AppColors.warning;
+    if (mood <= 7) return AppColors.primary;
+    return AppColors.vitality;
   }
 
   String _formatDate(DateTime date) {
@@ -590,6 +696,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   }
 
   void _navigateToHistory() {
+    print('DEBUG: Navegando para History...');
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -599,6 +706,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   }
 
   void _navigateToInsights() {
+    print('DEBUG: Navegando para Insights...');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const MoodInsightsScreen()),
@@ -606,9 +714,39 @@ class _DiaryScreenState extends State<DiaryScreen> {
   }
 
   void _navigateToWeeklyReflection() {
+    print('DEBUG: Navegando para Weekly Reflection...');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const WeeklyReflectionScreen()),
+    );
+  }
+
+  void _navigateToBreathing() {
+    print('DEBUG: Navegando para Breathing...');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const BreathingScreen()),
+    );
+  }
+
+  void _navigateToExercises() {
+    print('DEBUG: Navegando para Exercises...');
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ExercisesScreen()),
+    );
+  }
+
+  void _navigateToAlerts() {
+    print('DEBUG: Navegando para Alerts...');
+    // TODO: Implementar tela de alertas
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Funcionalidade de alertas em desenvolvimento'),
+        backgroundColor: AppColors.primary,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
   }
 

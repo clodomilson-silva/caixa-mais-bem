@@ -145,7 +145,12 @@ class HomeTab extends StatelessWidget {
                   subtitle: 'Alongue-se agora',
                   color: Colors.blue,
                   onTap: () {
-                    // TODO: Navegar para exercícios
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ExercisesScreen(),
+                      ),
+                    );
                   },
                 ),
                 _QuickActionCard(
@@ -154,7 +159,12 @@ class HomeTab extends StatelessWidget {
                   subtitle: 'Relaxe 5 minutos',
                   color: Colors.green,
                   onTap: () {
-                    // TODO: Navegar para respiração
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const BreathingScreen(),
+                      ),
+                    );
                   },
                 ),
                 _QuickActionCard(
@@ -163,7 +173,12 @@ class HomeTab extends StatelessWidget {
                   subtitle: 'Como foi seu dia?',
                   color: Colors.orange,
                   onTap: () {
-                    // TODO: Navegar para diário
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const DiaryScreen(),
+                      ),
+                    );
                   },
                 ),
                 _QuickActionCard(
@@ -172,7 +187,12 @@ class HomeTab extends StatelessWidget {
                   subtitle: 'Aprenda mais',
                   color: Colors.purple,
                   onTap: () {
-                    // TODO: Navegar para educação
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const EducationScreen(),
+                      ),
+                    );
                   },
                 ),
               ],
