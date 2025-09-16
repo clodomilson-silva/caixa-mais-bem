@@ -11,7 +11,7 @@ class QuickMoodEntryScreen extends StatefulWidget {
 
 class _QuickMoodEntryScreenState extends State<QuickMoodEntryScreen> {
   int _selectedMood = 5;
-  List<String> _selectedEmotions = [];
+  final List<String> _selectedEmotions = [];
   String? _selectedTrigger;
   WorkContext? _workContext;
   final TextEditingController _notesController = TextEditingController();

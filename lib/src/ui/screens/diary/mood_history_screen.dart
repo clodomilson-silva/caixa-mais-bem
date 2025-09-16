@@ -379,7 +379,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen>
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -669,7 +669,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen>
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );
@@ -747,7 +747,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen>
                 ],
               ),
             );
-          }).toList(),
+          }),
         ],
       ),
     );

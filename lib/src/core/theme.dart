@@ -9,61 +9,67 @@ class AppTheme {
       brightness: Brightness.light,
       surface: AppColors.surface,
       background: AppColors.background,
+      primary: AppColors.primary,
+      secondary: AppColors.balance,
+      tertiary: AppColors.energy,
+      onPrimary: AppColors.textOnPrimary,
+      onSurface: AppColors.textPrimary,
     ),
     scaffoldBackgroundColor: AppColors.background,
 
-    // Configuração do AppBar
+    // Configuração do AppBar com gradiente amarelo
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.primary,
-      foregroundColor: Colors.white,
+      foregroundColor: AppColors.textOnPrimary,
       elevation: 0,
       centerTitle: true,
-      titleTextStyle: const TextStyle(
+      titleTextStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: Colors.white,
+        color: AppColors.textOnPrimary,
       ),
     ),
 
-    // Botões elevados
+    // Botões elevados com gradiente sutil
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.textOnPrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        elevation: 2,
+        elevation: 3,
+        shadowColor: AppColors.primaryDark.withOpacity(0.3),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
 
-    // Cards
+    // Cards com fundo amarelo suave
     cardTheme: CardThemeData(
       color: AppColors.surface,
-      surfaceTintColor: AppColors.surfaceLight,
+      surfaceTintColor: AppColors.surfaceWarm,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
-      shadowColor: AppColors.primary.withOpacity(0.1),
+      shadowColor: AppColors.primary.withOpacity(0.15),
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
     ),
 
     // Floating Action Button
     floatingActionButtonTheme: FloatingActionButtonThemeData(
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.energy,
       foregroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 6,
     ),
 
-    // Input Decoration
+    // Input Decoration com tons amarelos
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.4)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
+        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.4)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -74,7 +80,7 @@ class AppTheme {
       fillColor: AppColors.surfaceLight,
     ),
 
-    // Cores de texto
+    // Cores de texto atualizadas
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
         color: AppColors.textPrimary,
@@ -111,6 +117,31 @@ class AppTheme {
         fontSize: 12,
         fontWeight: FontWeight.normal,
       ),
+    ),
+
+    // Chip Theme com tons amarelos
+    chipTheme: ChipThemeData(
+      backgroundColor: AppColors.surfaceWarm,
+      selectedColor: AppColors.primary,
+      disabledColor: AppColors.peace,
+      labelStyle: TextStyle(color: AppColors.textPrimary),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    ),
+
+    // Switch e outros componentes
+    switchTheme: SwitchThemeData(
+      thumbColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return AppColors.primary;
+        }
+        return AppColors.textLight;
+      }),
+      trackColor: MaterialStateProperty.resolveWith((states) {
+        if (states.contains(MaterialState.selected)) {
+          return AppColors.primaryLight;
+        }
+        return AppColors.surfaceLight;
+      }),
     ),
   );
 }

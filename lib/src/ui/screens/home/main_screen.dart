@@ -143,7 +143,7 @@ class HomeTab extends StatelessWidget {
                   icon: Icons.fitness_center,
                   title: 'Exercícios',
                   subtitle: 'Alongue-se agora',
-                  color: Colors.blue,
+                  color: const Color(0xFFFFB300), // Amarelo dourado
                   onTap: () {
                     Navigator.push(
                       context,
@@ -157,7 +157,7 @@ class HomeTab extends StatelessWidget {
                   icon: Icons.air,
                   title: 'Respiração',
                   subtitle: 'Relaxe 5 minutos',
-                  color: Colors.green,
+                  color: const Color(0xFFFFE082), // Amarelo suave
                   onTap: () {
                     Navigator.push(
                       context,
@@ -171,7 +171,7 @@ class HomeTab extends StatelessWidget {
                   icon: Icons.book,
                   title: 'Diário',
                   subtitle: 'Como foi seu dia?',
-                  color: Colors.orange,
+                  color: const Color(0xFFFF8F00), // Laranja quente
                   onTap: () {
                     Navigator.push(
                       context,
@@ -185,7 +185,7 @@ class HomeTab extends StatelessWidget {
                   icon: Icons.school,
                   title: 'Dicas',
                   subtitle: 'Aprenda mais',
-                  color: Colors.purple,
+                  color: const Color(0xFFFFAB00), // Âmbar
                   onTap: () {
                     Navigator.push(
                       context,

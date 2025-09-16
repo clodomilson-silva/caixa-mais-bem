@@ -14,13 +14,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _current = 0;
-  final _pages = [const ExercisesTab(), const BreathingTab(), const DiaryTab(), const AlertsTab(), const ContentTab()];
+  final _pages = [
+    const ExercisesTab(),
+    const BreathingTab(),
+    const DiaryTab(),
+    const AlertsTab(),
+    const ContentTab(),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(child: _pages[_current]),
-      bottomNavigationBar: AppBottomNav(currentIndex: _current, onTap: (i) => setState(() => _current = i)),
+      bottomNavigationBar: AppBottomNav(
+        currentIndex: _current,
+        onTap: (i) => setState(() => _current = i),
+      ),
     );
   }
 }

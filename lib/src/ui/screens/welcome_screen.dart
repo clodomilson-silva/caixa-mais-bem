@@ -158,7 +158,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             end: Alignment.bottomCenter,
             colors: [
               AppColors.background,
-              Color(0xFFF0F8F0),
+              AppColors.surfaceWarm,
               AppColors.surface,
             ],
           ),
@@ -182,7 +182,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           height: 48,
                           decoration: BoxDecoration(
                             gradient: const LinearGradient(
-                              colors: [AppColors.primary, AppColors.serenity],
+                              colors: [AppColors.primary, AppColors.energy],
                             ),
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
@@ -272,7 +272,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             _buildFloatingCard(
                               icon: Icons.psychology_rounded,
                               title: 'Mental',
-                              color: AppColors.balance,
+                              color: AppColors.mindfulness,
                               delay: 2,
                             ),
                           ],
