@@ -53,8 +53,66 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-class HomeTab extends StatelessWidget {
+class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
+
+  @override
+  State<HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<HomeTab> {
+  int? _selectedMood; // Para rastrear o humor selecionado
+
+  // Definir os diferentes humores
+  final List<Map<String, dynamic>> _moods = [
+    {
+      'icon': Icons.sentiment_very_satisfied,
+      'label': 'Alegre',
+      'color': Colors.green,
+      'moodType': 'happy',
+    },
+    {
+      'icon': Icons.sentiment_dissatisfied,
+      'label': 'Triste',
+      'color': Colors.blue,
+      'moodType': 'sad',
+    },
+    {
+      'icon': Icons.sentiment_neutral,
+      'label': 'Neutro',
+      'color': Colors.grey,
+      'moodType': 'neutral',
+    },
+    {
+      'icon': Icons.sentiment_satisfied,
+      'label': 'Calmo',
+      'color': Colors.purple,
+      'moodType': 'calm',
+    },
+    {
+      'icon': Icons.sentiment_very_dissatisfied,
+      'label': 'Estressado',
+      'color': Colors.red,
+      'moodType': 'stressed',
+    },
+  ];
+
+  void _onMoodSelected(int moodIndex) {
+    setState(() {
+      _selectedMood = moodIndex;
+    });
+
+    // Navegar para a tela de educação com dicas específicas
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EducationScreen(
+          moodType: _moods[moodIndex]['moodType'],
+          moodLabel: _moods[moodIndex]['label'],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,18 +161,55 @@ class HomeTab extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        for (int i = 1; i <= 5; i++)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                // TODO: Salvar humor do dia
-                              },
-                              child: Icon(
-                                Icons.sentiment_satisfied,
-                                size: 32,
-                                color: Colors.yellow[700],
+                        for (int i = 0; i < _moods.length; i++)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4.0,
+                              ),
+                              child: GestureDetector(
+                                onTap: () => _onMoodSelected(i),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: _selectedMood == i
+                                            ? _moods[i]['color'].withOpacity(
+                                                0.2,
+                                              )
+                                            : Colors.transparent,
+                                        border: Border.all(
+                                          color: _selectedMood == i
+                                              ? _moods[i]['color']
+                                              : Colors.transparent,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Icon(
+                                        _moods[i]['icon'],
+                                        size: 32,
+                                        color: _moods[i]['color'],
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      _moods[i]['label'],
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: _selectedMood == i
+                                            ? _moods[i]['color']
+                                            : Colors.grey[600],
+                                        fontWeight: _selectedMood == i
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -183,7 +278,7 @@ class HomeTab extends StatelessWidget {
                 ),
                 _QuickActionCard(
                   icon: Icons.school,
-                  title: 'Dicas',
+                  title: 'Educação',
                   subtitle: 'Aprenda mais',
                   color: const Color(0xFFFFAB00), // Âmbar
                   onTap: () {
