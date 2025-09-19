@@ -114,6 +114,151 @@ class _HomeTabState extends State<HomeTab> {
     );
   }
 
+  void _showSettingsMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Configurações',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              _buildMenuOption(
+                context,
+                icon: Icons.person,
+                title: 'Perfil',
+                subtitle: 'Gerenciar informações pessoais',
+                onTap: () {
+                  Navigator.pop(context);
+                  // TODO: Navegar para tela de perfil
+                },
+              ),
+              _buildMenuOption(
+                context,
+                icon: Icons.notifications,
+                title: 'Notificações',
+                subtitle: 'Configurar alertas e lembretes',
+                onTap: () {
+                  Navigator.pop(context);
+                  // TODO: Navegar para configurações de notificação
+                },
+              ),
+              _buildMenuOption(
+                context,
+                icon: Icons.support_agent,
+                title: 'Suporte',
+                subtitle: 'Ajuda e contato',
+                onTap: () {
+                  Navigator.pop(context);
+                  // TODO: Navegar para tela de suporte
+                },
+              ),
+              _buildMenuOption(
+                context,
+                icon: Icons.exit_to_app,
+                title: 'Sair',
+                subtitle: 'Fazer logout da conta',
+                onTap: () {
+                  Navigator.pop(context);
+                  _showLogoutDialog(context);
+                },
+                isDestructive: true,
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuOption(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: isDestructive
+              ? Colors.red.withOpacity(0.1)
+              : Theme.of(context).primaryColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          icon,
+          color: isDestructive ? Colors.red : Theme.of(context).primaryColor,
+        ),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: isDestructive ? Colors.red : null,
+        ),
+      ),
+      subtitle: Text(subtitle),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: Colors.grey[400],
+      ),
+      onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Saída'),
+          content: const Text('Tem certeza que deseja sair da sua conta?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                // TODO: Implementar logout e navegação para tela de login
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Sair'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +275,7 @@ class _HomeTabState extends State<HomeTab> {
           IconButton(
             icon: const Icon(Icons.settings),
             onPressed: () {
-              // TODO: Implementar configurações
+              _showSettingsMenu(context);
             },
           ),
         ],
