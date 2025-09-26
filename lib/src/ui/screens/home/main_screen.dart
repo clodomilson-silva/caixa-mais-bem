@@ -3,6 +3,9 @@ import '../exercises/exercises_screen.dart';
 import '../breathing/breathing_screen.dart';
 import '../diary/diary_screen.dart';
 import '../education/education_screen.dart';
+import '../settings/profile_screen.dart';
+import '../settings/notifications_screen.dart';
+import '../settings/support_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -63,36 +66,36 @@ class HomeTab extends StatefulWidget {
 class _HomeTabState extends State<HomeTab> {
   int? _selectedMood; // Para rastrear o humor selecionado
 
-  // Definir os diferentes humores
+  // Definir os diferentes humores com nova paleta de cores
   final List<Map<String, dynamic>> _moods = [
     {
       'icon': Icons.sentiment_very_satisfied,
       'label': 'Alegre',
-      'color': Colors.green,
+      'color': Color(0xFF66BB6A), // Verde natural - energia positiva
       'moodType': 'happy',
     },
     {
       'icon': Icons.sentiment_dissatisfied,
       'label': 'Triste',
-      'color': Colors.blue,
+      'color': Color(0xFF42A5F5), // Azul suave - tranquilidade
       'moodType': 'sad',
     },
     {
       'icon': Icons.sentiment_neutral,
       'label': 'Neutro',
-      'color': Colors.grey,
+      'color': Color(0xFF9E9E9E), // Cinza equilibrado
       'moodType': 'neutral',
     },
     {
       'icon': Icons.sentiment_satisfied,
       'label': 'Calmo',
-      'color': Colors.purple,
+      'color': Color(0xFF26A69A), // Teal principal - serenidade
       'moodType': 'calm',
     },
     {
       'icon': Icons.sentiment_very_dissatisfied,
-      'label': 'Estressado',
-      'color': Colors.red,
+      'label': 'Stress',
+      'color': Color(0xFFFF7043), // Coral - atenção sem agressividade
       'moodType': 'stressed',
     },
   ];
@@ -147,7 +150,12 @@ class _HomeTabState extends State<HomeTab> {
                 subtitle: 'Gerenciar informações pessoais',
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Navegar para tela de perfil
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
                 },
               ),
               _buildMenuOption(
@@ -157,7 +165,12 @@ class _HomeTabState extends State<HomeTab> {
                 subtitle: 'Configurar alertas e lembretes',
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Navegar para configurações de notificação
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationsScreen(),
+                    ),
+                  );
                 },
               ),
               _buildMenuOption(
@@ -167,7 +180,12 @@ class _HomeTabState extends State<HomeTab> {
                 subtitle: 'Ajuda e contato',
                 onTap: () {
                   Navigator.pop(context);
-                  // TODO: Navegar para tela de suporte
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SupportScreen(),
+                    ),
+                  );
                 },
               ),
               _buildMenuOption(
@@ -383,7 +401,7 @@ class _HomeTabState extends State<HomeTab> {
                   icon: Icons.fitness_center,
                   title: 'Exercícios',
                   subtitle: 'Alongue-se agora',
-                  color: const Color(0xFFFFB300), // Amarelo dourado
+                  color: const Color(0xFF66BB6A), // Verde natural - energia
                   onTap: () {
                     Navigator.push(
                       context,
@@ -397,7 +415,7 @@ class _HomeTabState extends State<HomeTab> {
                   icon: Icons.air,
                   title: 'Respiração',
                   subtitle: 'Relaxe 5 minutos',
-                  color: const Color(0xFFFFE082), // Amarelo suave
+                  color: const Color(0xFF26A69A), // Teal - tranquilidade
                   onTap: () {
                     Navigator.push(
                       context,
@@ -411,7 +429,7 @@ class _HomeTabState extends State<HomeTab> {
                   icon: Icons.book,
                   title: 'Diário',
                   subtitle: 'Como foi seu dia?',
-                  color: const Color(0xFFFF8F00), // Laranja quente
+                  color: const Color(0xFF42A5F5), // Azul - reflexão
                   onTap: () {
                     Navigator.push(
                       context,
@@ -425,7 +443,7 @@ class _HomeTabState extends State<HomeTab> {
                   icon: Icons.school,
                   title: 'Educação',
                   subtitle: 'Aprenda mais',
-                  color: const Color(0xFFFFAB00), // Âmbar
+                  color: const Color(0xFF7986CB), // Índigo - conhecimento
                   onTap: () {
                     Navigator.push(
                       context,

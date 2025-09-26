@@ -3,7 +3,7 @@ import '../../../models/mood_entry.dart';
 import '../../../services/mood_repository.dart';
 import '../../../core/constants.dart';
 import 'quick_mood_entry_screen.dart';
-import 'mood_history_screen_simple.dart' as history;
+import 'mood_history_screen.dart';
 import 'mood_insights_screen.dart';
 import 'weekly_reflection_screen.dart';
 import '../breathing/breathing_screen.dart';
@@ -56,13 +56,13 @@ class _DiaryScreenState extends State<DiaryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           'Diário Emocional',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFFFF7043),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
@@ -109,11 +109,11 @@ class _DiaryScreenState extends State<DiaryScreen> {
   Widget _buildHeader() {
     return Container(
       width: double.infinity,
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFFF7043), Color(0xFFFF8A65)],
+          colors: [AppColors.primary, AppColors.serenity],
         ),
       ),
       child: Padding(
@@ -149,15 +149,9 @@ class _DiaryScreenState extends State<DiaryScreen> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        border: Border.all(color: AppColors.primary.withOpacity(0.1)),
       ),
       child: Column(
         children: [
@@ -166,9 +160,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: _hasEntryToday
-                      ? const Color(0xFF4CAF50)
-                      : const Color(0xFFFF7043),
+                  color: _hasEntryToday ? AppColors.success : AppColors.primary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -186,10 +178,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
                       _hasEntryToday
                           ? 'Registro de Hoje'
                           : 'Check-in Emocional',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Color(0xFF2E2E2E),
+                        color: AppColors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -197,7 +189,10 @@ class _DiaryScreenState extends State<DiaryScreen> {
                       _hasEntryToday
                           ? 'Obrigado por compartilhar suas emoções!'
                           : 'Como está seu dia até agora?',
-                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                   ],
                 ),
@@ -211,8 +206,8 @@ class _DiaryScreenState extends State<DiaryScreen> {
               onPressed: () => _navigateToQuickEntry(),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _hasEntryToday
-                    ? const Color(0xFF4CAF50)
-                    : const Color(0xFFFF7043),
+                    ? AppColors.success
+                    : AppColors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -481,7 +476,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   'Reflexão',
                   'Perguntas semanais',
                   Icons.self_improvement,
-                  AppColors.peace,
+                  AppColors.mindfulness,
                   () => _navigateToWeeklyReflection(),
                 ),
               ),
@@ -491,7 +486,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                   'Alertas',
                   'Configurar pausas',
                   Icons.notifications_active,
-                  AppColors.mindfulness,
+                  AppColors.accent,
                   () => _navigateToAlerts(),
                 ),
               ),
@@ -518,51 +513,52 @@ class _DiaryScreenState extends State<DiaryScreen> {
         },
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          height: 140, // Altura fixa para manter proporções
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [color.withOpacity(0.1), color.withOpacity(0.05)],
+              colors: [color.withOpacity(0.15), color.withOpacity(0.08)],
             ),
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: color.withOpacity(0.2), width: 1),
+            border: Border.all(color: color.withOpacity(0.3), width: 1.5),
             boxShadow: [
               BoxShadow(
-                color: color.withOpacity(0.15),
+                color: color.withOpacity(0.2),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
             ],
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12),
+                  color: color.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: color, size: 28),
+                child: Icon(icon, color: color, size: 24),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: color,
+                  color: color.withOpacity(0.9),
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 subtitle,
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   color: AppColors.textSecondary,
-                  height: 1.3,
+                  height: 1.2,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 2,
@@ -699,9 +695,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
     print('DEBUG: Navegando para History...');
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const history.MoodHistoryScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const MoodHistoryScreen()),
     );
   }
 

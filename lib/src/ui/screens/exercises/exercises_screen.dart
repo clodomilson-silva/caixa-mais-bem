@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../models/exercise.dart';
 import '../../../services/exercise_repository.dart';
+import '../../../core/constants.dart';
 
 class ExercisesScreen extends StatefulWidget {
   const ExercisesScreen({super.key});
@@ -53,7 +54,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
       appBar: AppBar(
         title: const Text('Exercícios e Dicas'),
         centerTitle: true,
-        backgroundColor: Colors.blue[50],
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.textOnPrimary,
       ),
       body: Column(
         children: [
@@ -75,8 +77,8 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                           selectedCategory = category;
                         });
                       },
-                      backgroundColor: Colors.grey[100],
-                      selectedColor: Colors.blue[100],
+                      backgroundColor: AppColors.surfaceLight,
+                      selectedColor: AppColors.serenity,
                     ),
                   );
                 }).toList(),
@@ -226,8 +228,10 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
                         icon: const Icon(Icons.play_circle_outline),
                         label: const Text('Ver Vídeo'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[50],
-                          foregroundColor: Colors.red[700],
+                          backgroundColor: AppColors.complement.withOpacity(
+                            0.1,
+                          ),
+                          foregroundColor: AppColors.complement,
                         ),
                       ),
                     ),

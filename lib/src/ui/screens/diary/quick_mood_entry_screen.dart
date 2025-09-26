@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../models/mood_entry.dart';
 import '../../../services/mood_repository.dart';
+import '../../../core/constants.dart';
 
 class QuickMoodEntryScreen extends StatefulWidget {
   const QuickMoodEntryScreen({super.key});
@@ -21,13 +22,13 @@ class _QuickMoodEntryScreenState extends State<QuickMoodEntryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           'Como você está?',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFFFF7043),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
@@ -45,11 +46,11 @@ class _QuickMoodEntryScreenState extends State<QuickMoodEntryScreen> {
           // Header
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFFFF7043), Color(0xFFFF8A65)],
+                colors: [AppColors.primary, AppColors.serenity],
               ),
             ),
             child: Padding(

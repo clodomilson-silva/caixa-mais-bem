@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../core/constants.dart';
-import '../widgets/custom_button.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -150,6 +149,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final topPadding = MediaQuery.of(context).padding.top;
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final availableHeight = screenHeight - topPadding - bottomPadding;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -164,213 +168,272 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 40),
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              return true; // Consume the scroll notification
+            },
+            child: Scrollbar(
+              thumbVisibility: true,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+                child: Container(
+                  constraints: BoxConstraints(minHeight: availableHeight),
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 40),
 
-                  // Header animado
-                  FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [AppColors.primary, AppColors.energy],
-                            ),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.primary.withOpacity(0.3),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: const Icon(
-                            Icons.favorite_rounded,
-                            color: Colors.white,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Caixa Mais Bem',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 50),
-
-                  // Título principal com animação
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Bem-estar no\ntrabalho começa\naqui',
-                            style: TextStyle(
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textPrimary,
-                              height: 1.2,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            'Cuide da sua saúde física e mental com exercícios, técnicas de respiração e acompanhamento personalizado.',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: AppColors.textSecondary,
-                              height: 1.5,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 40),
-
-                  // Cards flutuantes com ícones
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 1000),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
+                      // Header animado
+                      FadeTransition(
+                        opacity: _fadeAnimation,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildFloatingCard(
-                              icon: Icons.self_improvement_rounded,
-                              title: 'Respiração',
-                              color: AppColors.serenity,
-                              delay: 0,
-                            ),
-                            _buildFloatingCard(
-                              icon: Icons.fitness_center_rounded,
-                              title: 'Exercícios',
-                              color: AppColors.energy,
-                              delay: 1,
-                            ),
-                            _buildFloatingCard(
-                              icon: Icons.psychology_rounded,
-                              title: 'Mental',
-                              color: AppColors.mindfulness,
-                              delay: 2,
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 50),
-
-                  // Lista de funcionalidades
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 800),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'O que você encontrará:',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.textPrimary,
+                            Container(
+                              width: 48,
+                              height: 48,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [AppColors.primary, AppColors.energy],
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.primary.withOpacity(0.3),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.favorite_rounded,
+                                color: Colors.white,
+                                size: 24,
                               ),
                             ),
-                            const SizedBox(height: 24),
-                            _buildFeaturesList(),
+                            const SizedBox(width: 12),
+                            const Text(
+                              'Caixa Mais Bem',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.primary,
+                              ),
+                            ),
                           ],
                         ),
-                      );
-                    },
-                  ),
+                      ),
 
-                  const SizedBox(height: 40),
+                      const SizedBox(height: 50),
 
-                  // Botões de ação
-                  TweenAnimationBuilder<double>(
-                    duration: const Duration(milliseconds: 1200),
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    builder: (context, value, child) {
-                      return Transform.translate(
-                        offset: Offset(0, 30 * (1 - value)),
-                        child: Opacity(
-                          opacity: value,
+                      // Título principal com animação
+                      SlideTransition(
+                        position: _slideAnimation,
+                        child: FadeTransition(
+                          opacity: _fadeAnimation,
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.primary.withOpacity(0.3),
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 8),
-                                    ),
-                                  ],
-                                ),
-                                child: CustomButton(
-                                  text: 'Começar Jornada',
-                                  onPressed: () =>
-                                      Navigator.pushNamed(context, '/login'),
-                                  backgroundColor: AppColors.primary,
-                                  textColor: Colors.white,
-                                  height: 56,
-                                  borderRadius: BorderRadius.circular(16),
+                              Text(
+                                'Bem-estar no\ntrabalho começa\naqui',
+                                style: TextStyle(
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary,
+                                  height: 1.2,
                                 ),
                               ),
                               const SizedBox(height: 16),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16),
-                                  border: Border.all(
-                                    color: AppColors.primary.withOpacity(0.3),
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: CustomButton(
-                                  text: 'Explorar sem conta',
-                                  onPressed: () =>
-                                      Navigator.pushNamed(context, '/main'),
-                                  backgroundColor: Colors.transparent,
-                                  textColor: AppColors.primary,
-                                  height: 56,
-                                  borderRadius: BorderRadius.circular(16),
+                              Text(
+                                'Cuide da sua saúde física e mental com exercícios, técnicas de respiração e acompanhamento personalizado.',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: AppColors.textSecondary,
+                                  height: 1.5,
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      );
-                    },
-                  ),
+                      ),
 
-                  const SizedBox(height: 40),
-                ],
+                      const SizedBox(height: 40),
+
+                      // Cards flutuantes com ícones
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 1000),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildFloatingCard(
+                                  icon: Icons.self_improvement_rounded,
+                                  title: 'Respiração',
+                                  color: AppColors.serenity,
+                                  delay: 0,
+                                ),
+                                _buildFloatingCard(
+                                  icon: Icons.fitness_center_rounded,
+                                  title: 'Exercícios',
+                                  color: AppColors.energy,
+                                  delay: 1,
+                                ),
+                                _buildFloatingCard(
+                                  icon: Icons.psychology_rounded,
+                                  title: 'Mental',
+                                  color: AppColors.mindfulness,
+                                  delay: 2,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 50),
+
+                      // Lista de funcionalidades
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 800),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        builder: (context, value, child) {
+                          return Opacity(
+                            opacity: value,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'O que você encontrará:',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                _buildFeaturesList(),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 40),
+
+                      // Botões de ação
+                      TweenAnimationBuilder<double>(
+                        duration: const Duration(milliseconds: 1200),
+                        tween: Tween(begin: 0.0, end: 1.0),
+                        builder: (context, value, child) {
+                          return Transform.translate(
+                            offset: Offset(0, 30 * (1 - value)),
+                            child: Opacity(
+                              opacity: value,
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppColors.primary.withOpacity(
+                                            0.3,
+                                          ),
+                                          blurRadius: 20,
+                                          offset: const Offset(0, 8),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        print(
+                                          'Botão Começar Jornada pressionado',
+                                        );
+                                        Navigator.pushNamed(context, '/login');
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: AppColors.primary,
+                                        foregroundColor: Colors.white,
+                                        minimumSize: const Size(
+                                          double.infinity,
+                                          56,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Começar Jornada',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: AppColors.primary.withOpacity(
+                                          0.3,
+                                        ),
+                                        width: 1.5,
+                                      ),
+                                    ),
+                                    child: OutlinedButton(
+                                      onPressed: () {
+                                        print(
+                                          'Botão Explorar sem conta pressionado',
+                                        );
+                                        Navigator.pushNamed(context, '/main');
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        foregroundColor: AppColors.primary,
+                                        minimumSize: const Size(
+                                          double.infinity,
+                                          56,
+                                        ),
+                                        side: BorderSide(
+                                          color: AppColors.primary.withOpacity(
+                                            0.3,
+                                          ),
+                                          width: 1.5,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            16,
+                                          ),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'Explorar sem conta',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+
+                      const SizedBox(height: 40),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

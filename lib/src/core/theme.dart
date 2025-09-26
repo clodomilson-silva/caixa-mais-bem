@@ -17,7 +17,7 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: AppColors.background,
 
-    // Configuração do AppBar com gradiente amarelo
+    // AppBar com design moderno e gradiente sutil
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.textOnPrimary,
@@ -28,28 +28,29 @@ class AppTheme {
         fontWeight: FontWeight.w600,
         color: AppColors.textOnPrimary,
       ),
+      shadowColor: AppColors.primaryDark.withOpacity(0.3),
     ),
 
-    // Botões elevados com gradiente sutil
+    // Botões elevados modernos
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.textOnPrimary,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-        elevation: 3,
-        shadowColor: AppColors.primaryDark.withOpacity(0.3),
+        elevation: 2,
+        shadowColor: AppColors.primary.withOpacity(0.3),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     ),
 
-    // Cards com fundo amarelo suave
+    // Cards com design clean
     cardTheme: CardThemeData(
       color: AppColors.surface,
-      surfaceTintColor: AppColors.surfaceWarm,
+      surfaceTintColor: AppColors.serenity.withOpacity(0.1),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      shadowColor: AppColors.primary.withOpacity(0.15),
+      elevation: 3,
+      shadowColor: AppColors.primary.withOpacity(0.1),
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
     ),
 
@@ -58,18 +59,18 @@ class AppTheme {
       backgroundColor: AppColors.energy,
       foregroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 6,
+      elevation: 4,
     ),
 
-    // Input Decoration com tons amarelos
+    // Input fields modernos
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.4)),
+        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.4)),
+        borderSide: BorderSide(color: AppColors.primary.withOpacity(0.3)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
@@ -119,16 +120,18 @@ class AppTheme {
       ),
     ),
 
-    // Chip Theme com tons amarelos
+    // Chip Theme moderno
     chipTheme: ChipThemeData(
-      backgroundColor: AppColors.surfaceWarm,
+      backgroundColor: AppColors.serenity.withOpacity(0.2),
       selectedColor: AppColors.primary,
       disabledColor: AppColors.peace,
       labelStyle: TextStyle(color: AppColors.textPrimary),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      elevation: 1,
+      pressElevation: 2,
     ),
 
-    // Switch e outros componentes
+    // Switch com cores harmoniosas
     switchTheme: SwitchThemeData(
       thumbColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
@@ -138,10 +141,19 @@ class AppTheme {
       }),
       trackColor: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
-          return AppColors.primaryLight;
+          return AppColors.serenity;
         }
         return AppColors.surfaceLight;
       }),
+    ),
+
+    // Bottom Navigation Bar
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: AppColors.surface,
+      selectedItemColor: AppColors.primary,
+      unselectedItemColor: AppColors.textLight,
+      elevation: 8,
+      type: BottomNavigationBarType.fixed,
     ),
   );
 }

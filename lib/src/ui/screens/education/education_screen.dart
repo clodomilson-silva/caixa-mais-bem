@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EducationScreen extends StatelessWidget {
   final String? moodType;
@@ -13,9 +14,11 @@ class EducationScreen extends StatelessWidget {
         title: Text(
           moodType != null
               ? 'Dicas para quando estiver $moodLabel'
-              : 'Conteúdo Educativo',
+              : 'Vídeos Educativos',
         ),
         centerTitle: true,
+        backgroundColor: Color(0xFF26A69A), // Teal principal
+        foregroundColor: Colors.white,
       ),
       body: moodType != null
           ? _buildMoodSpecificContent()
@@ -79,23 +82,401 @@ class EducationScreen extends StatelessWidget {
   }
 
   Widget _buildGeneralContent() {
-    return const Center(
+    return DefaultTabController(
+      length: 4,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.school, size: 80, color: Colors.purple),
-          SizedBox(height: 16),
-          Text(
-            'Conteúdo Educativo',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          Container(
+            color: Colors.grey[50],
+            child: TabBar(
+              tabs: const [
+                Tab(icon: Icon(Icons.favorite), text: 'Bem-Estar'),
+                Tab(icon: Icon(Icons.fitness_center), text: 'Exercícios'),
+                Tab(icon: Icon(Icons.restaurant), text: 'Alimentação'),
+                Tab(icon: Icon(Icons.psychology), text: 'Mental'),
+              ],
+              labelColor: Color(0xFF26A69A), // Teal principal
+              unselectedLabelColor: Colors.grey[600],
+              indicatorColor: Color(0xFF26A69A), // Teal principal
+            ),
           ),
-          SizedBox(height: 8),
-          Text(
-            'Selecione como você está se sentindo\nna tela inicial para receber dicas personalizadas!',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, color: Colors.grey),
+          Expanded(
+            child: TabBarView(
+              children: [
+                _buildWellBeingVideos(),
+                _buildExerciseVideos(),
+                _buildNutritionVideos(),
+                _buildMentalHealthVideos(),
+              ],
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Métodos para construir as seções de vídeos educativos com thumbnails reais
+  Widget _buildWellBeingVideos() {
+    final videos = [
+      {
+        'title': 'Bem-Estar e Qualidade de Vida',
+        'description':
+            'Dicas fundamentais para melhorar seu bem-estar e viver com mais qualidade de vida',
+        'duration': '10:30',
+        'category': 'Bem-Estar',
+        'url': 'https://www.youtube.com/watch?v=a3-OvmUY-Hc',
+        'thumbnail': 'https://img.youtube.com/vi/a3-OvmUY-Hc/hqdefault.jpg',
+      },
+      {
+        'title': 'Saúde Mental - Cuidados Essenciais',
+        'description':
+            'Como cuidar da sua saúde mental e manter o equilíbrio emocional no dia a dia',
+        'duration': '12:15',
+        'category': 'Bem-Estar',
+        'url': 'https://www.youtube.com/watch?v=UwyE_XIQ7DA',
+        'thumbnail': 'https://img.youtube.com/vi/UwyE_XIQ7DA/hqdefault.jpg',
+      },
+      {
+        'title': 'Pessoa Saudável - Hábitos de Vida',
+        'description':
+            'Práticas essenciais para manter-se saudável física e mentalmente',
+        'duration': '8:45',
+        'category': 'Bem-Estar',
+        'url': 'https://www.youtube.com/watch?v=9q7WaQqtWK4',
+        'thumbnail': 'https://img.youtube.com/vi/9q7WaQqtWK4/hqdefault.jpg',
+      },
+    ];
+
+    return _buildVideoList(
+      videos,
+      Icons.favorite,
+      Color(0xFF80CBC4),
+    ); // Verde-água suave
+  }
+
+  Widget _buildExerciseVideos() {
+    final videos = [
+      {
+        'title': 'Exercícios Práticos e Eficazes',
+        'description':
+            'Sequência de exercícios simples para fazer em casa ou no trabalho e manter-se ativo',
+        'duration': '9:20',
+        'category': 'Exercícios',
+        'url': 'https://www.youtube.com/watch?v=QkMJSaZH4QA',
+        'thumbnail': 'https://img.youtube.com/vi/QkMJSaZH4QA/hqdefault.jpg',
+      },
+      {
+        'title': 'Atividade Física no Dia a Dia',
+        'description':
+            'Como incorporar movimento e exercícios na sua rotina diária de forma prática',
+        'duration': '11:35',
+        'category': 'Exercícios',
+        'url': 'https://www.youtube.com/watch?v=csvMY_TOBOs',
+        'thumbnail': 'https://img.youtube.com/vi/csvMY_TOBOs/hqdefault.jpg',
+      },
+      {
+        'title': 'Alongamento e Mobilidade',
+        'description':
+            'Exercícios de alongamento para melhorar flexibilidade e aliviar tensões corporais',
+        'duration': '7:45',
+        'category': 'Exercícios',
+        'url': 'https://www.youtube.com/watch?v=SgzczMDvMJk',
+        'thumbnail': 'https://img.youtube.com/vi/SgzczMDvMJk/hqdefault.jpg',
+      },
+    ];
+
+    return _buildVideoList(
+      videos,
+      Icons.fitness_center,
+      Color(0xFF66BB6A),
+    ); // Verde natural
+  }
+
+  Widget _buildNutritionVideos() {
+    final videos = [
+      {
+        'title': 'Nutrição e Alimentação Saudável',
+        'description':
+            'Guia completo sobre nutrição balanceada e como fazer escolhas alimentares inteligentes',
+        'duration': '13:22',
+        'category': 'Alimentação',
+        'url': 'https://www.youtube.com/watch?v=wk3kF0ToAbk',
+        'thumbnail': 'https://img.youtube.com/vi/wk3kF0ToAbk/hqdefault.jpg',
+      },
+      {
+        'title': 'Dicas de Alimentação Equilibrada',
+        'description':
+            'Como manter uma dieta equilibrada e nutritiva mesmo com a rotina corrida',
+        'duration': '8:55',
+        'category': 'Alimentação',
+        'url': 'https://www.youtube.com/watch?v=X71YbXctXeM',
+        'thumbnail': 'https://img.youtube.com/vi/X71YbXctXeM/hqdefault.jpg',
+      },
+      {
+        'title': 'Hábitos Alimentares Saudáveis',
+        'description':
+            'Estabeleça hábitos alimentares que promovem saúde, energia e bem-estar',
+        'duration': '10:18',
+        'category': 'Alimentação',
+        'url': 'https://www.youtube.com/watch?v=cOCimtPfP5Q',
+        'thumbnail': 'https://img.youtube.com/vi/cOCimtPfP5Q/hqdefault.jpg',
+      },
+    ];
+
+    return _buildVideoList(
+      videos,
+      Icons.restaurant,
+      Color(0xFFFFB74D),
+    ); // Laranja suave
+  }
+
+  Widget _buildMentalHealthVideos() {
+    final videos = [
+      {
+        'title': 'Saúde Mental e Bem-Estar',
+        'description':
+            'Estratégias fundamentais para cuidar da saúde mental e manter equilíbrio emocional',
+        'duration': '14:30',
+        'category': 'Saúde Mental',
+        'url': 'https://www.youtube.com/watch?v=CrwRwgNJIMU',
+        'thumbnail': 'https://img.youtube.com/vi/CrwRwgNJIMU/hqdefault.jpg',
+      },
+      {
+        'title': 'Técnicas de Relaxamento Mental',
+        'description':
+            'Aprenda técnicas eficazes para relaxar a mente e reduzir ansiedade e estresse',
+        'duration': '11:42',
+        'category': 'Saúde Mental',
+        'url': 'https://www.youtube.com/watch?v=2g1_FIGjuvc',
+        'thumbnail': 'https://img.youtube.com/vi/2g1_FIGjuvc/hqdefault.jpg',
+      },
+      {
+        'title': 'Mindfulness e Saúde Mental',
+        'description':
+            'Técnicas de mindfulness e atenção plena para fortalecer a saúde mental e reduzir estresse',
+        'duration': '12:15',
+        'category': 'Saúde Mental',
+        'url': 'https://www.youtube.com/watch?v=kuA2l7tXtE4',
+        'thumbnail': 'https://img.youtube.com/vi/kuA2l7tXtE4/hqdefault.jpg',
+      },
+    ];
+
+    return _buildVideoList(
+      videos,
+      Icons.psychology,
+      Color(0xFF7986CB),
+    ); // Índigo suave
+  }
+
+  Widget _buildVideoList(
+    List<Map<String, String>> videos,
+    IconData icon,
+    Color color,
+  ) {
+    return ListView.builder(
+      padding: const EdgeInsets.all(16.0),
+      itemCount: videos.length,
+      itemBuilder: (context, index) {
+        final video = videos[index];
+        return _buildVideoCard(video, icon, color);
+      },
+    );
+  }
+
+  Widget _buildVideoCard(
+    Map<String, String> video,
+    IconData icon,
+    Color color,
+  ) {
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.only(bottom: 16.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Builder(
+        builder: (context) => InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () async {
+            final videoUrl = video['url'];
+            if (videoUrl != null) {
+              try {
+                final uri = Uri.parse(videoUrl);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Não foi possível abrir o vídeo'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Erro ao abrir vídeo: ${video['title']}'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            }
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Thumbnail do vídeo com imagem real do YouTube
+              Container(
+                height: 180,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
+                  image: video['thumbnail'] != null
+                      ? DecorationImage(
+                          image: NetworkImage(video['thumbnail']!),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                  color: video['thumbnail'] == null
+                      ? color.withOpacity(0.7)
+                      : null,
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Overlay escuro para melhorar contraste
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                        color: Colors.black.withOpacity(0.3),
+                      ),
+                    ),
+                    // Ícone de play
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      padding: const EdgeInsets.all(12),
+                      child: const Icon(
+                        Icons.play_arrow,
+                        size: 40,
+                        color: Colors.white,
+                      ),
+                    ),
+                    // Badge com duração
+                    Positioned(
+                      bottom: 8,
+                      right: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.8),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          video['duration']!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // Informações do vídeo
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: color.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        video['category']!,
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      video['title']!,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      video['description']!,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                        height: 1.4,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(Icons.play_arrow, size: 16, color: color),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Assistir vídeo',
+                          style: TextStyle(
+                            color: color,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.access_time,
+                          size: 14,
+                          color: Colors.grey[500],
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          video['duration']!,
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -105,31 +486,35 @@ class EducationScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Row(
-              children: [
-                Icon(tip['icon'], color: _getMoodColor(), size: 24),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: _getMoodColor().withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(tip['icon'], color: _getMoodColor()),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
                     tip['title'],
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              tip['description'],
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[700],
-                height: 1.4,
+                  const SizedBox(height: 4),
+                  Text(
+                    tip['description'],
+                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                  ),
+                ],
               ),
             ),
           ],
@@ -143,32 +528,32 @@ class EducationScreen extends StatelessWidget {
       case 'happy':
         return Icons.sentiment_very_satisfied;
       case 'sad':
-        return Icons.sentiment_dissatisfied;
+        return Icons.sentiment_very_dissatisfied;
       case 'neutral':
         return Icons.sentiment_neutral;
       case 'calm':
-        return Icons.sentiment_satisfied;
+        return Icons.self_improvement;
       case 'stressed':
-        return Icons.sentiment_very_dissatisfied;
+        return Icons.psychology;
       default:
-        return Icons.sentiment_neutral;
+        return Icons.help_outline;
     }
   }
 
   Color _getMoodColor() {
     switch (moodType) {
       case 'happy':
-        return Colors.green;
+        return Colors.yellow[600]!;
       case 'sad':
-        return Colors.blue;
+        return Colors.blue[600]!;
       case 'neutral':
-        return Colors.grey;
+        return Colors.grey[600]!;
       case 'calm':
-        return Colors.purple;
+        return Colors.green[600]!;
       case 'stressed':
-        return Colors.red;
+        return Colors.red[600]!;
       default:
-        return Colors.grey;
+        return Colors.grey[600]!;
     }
   }
 
@@ -177,15 +562,15 @@ class EducationScreen extends StatelessWidget {
       case 'happy':
         return 'Que bom! Vamos manter essa energia positiva.';
       case 'sad':
-        return 'Tudo bem sentir-se assim. Vamos cuidar de você.';
+        return 'Entendemos. Aqui estão algumas dicas para te ajudar.';
       case 'neutral':
-        return 'Um dia equilibrado. Que tal algumas dicas?';
+        return 'Vamos encontrar maneiras de elevar seu bem-estar.';
       case 'calm':
-        return 'Ótimo estado mental! Vamos cultivar essa paz.';
+        return 'Perfeito! Vamos manter essa tranquilidade.';
       case 'stressed':
-        return 'Respire fundo. Temos dicas para te ajudar.';
+        return 'Vamos trabalhar juntos para reduzir esse estresse.';
       default:
-        return 'Como podemos te ajudar hoje?';
+        return '';
     }
   }
 
@@ -194,64 +579,64 @@ class EducationScreen extends StatelessWidget {
       case 'happy':
         return [
           {
+            'icon': Icons.share,
+            'title': 'Compartilhe a alegria',
+            'description':
+                'Conte para alguém sobre o que está te deixando feliz. Compartilhar momentos bons multiplica a felicidade.',
+          },
+          {
+            'icon': Icons.star,
+            'title': 'Anote este momento',
+            'description':
+                'Escreva sobre o que está te fazendo sentir bem hoje. Isso te ajudará a lembrar nos dias difíceis.',
+          },
+          {
             'icon': Icons.favorite,
-            'title': 'Compartilhe sua alegria',
+            'title': 'Pratique gratidão',
             'description':
-                'Que tal ligar para um amigo ou familiar e compartilhar algo bom que aconteceu hoje? A alegria compartilhada se multiplica.',
-          },
-          {
-            'icon': Icons.music_note,
-            'title': 'Dance um pouco',
-            'description':
-                'Coloque uma música que você gosta e dance por alguns minutos. O movimento amplifica sentimentos positivos.',
-          },
-          {
-            'icon': Icons.park,
-            'title': 'Aproveite a natureza',
-            'description':
-                'Se possível, saia para uma caminhada ou apenas observe pela janela. A natureza potencializa nossa felicidade.',
+                'Liste 3 coisas pelas quais você é grato hoje. A gratidão amplifica sentimentos positivos.',
           },
         ];
       case 'sad':
         return [
           {
-            'icon': Icons.self_improvement,
-            'title': 'Pratique respiração profunda',
-            'description':
-                'Inspire por 4 segundos, segure por 4, expire por 6. Repita 5 vezes. Isso ajuda a acalmar o sistema nervoso.',
-          },
-          {
-            'icon': Icons.book,
-            'title': 'Escreva seus sentimentos',
-            'description':
-                'Anote o que está sentindo. Às vezes, colocar no papel ajuda a processar e clarear os pensamentos.',
-          },
-          {
             'icon': Icons.phone,
             'title': 'Conecte-se com alguém',
             'description':
-                'Converse com um amigo de confiança ou familiar. Não precisa resolver tudo, apenas compartilhar já ajuda.',
+                'Ligue ou mande mensagem para um amigo próximo. Não precisamos passar por momentos difíceis sozinhos.',
+          },
+          {
+            'icon': Icons.nature_people,
+            'title': 'Saia para o ar livre',
+            'description':
+                'Uma caminhada de 10 minutos ao ar livre pode melhorar significativamente seu humor.',
+          },
+          {
+            'icon': Icons.self_improvement,
+            'title': 'Respire conscientemente',
+            'description':
+                'Faça 5 respirações profundas e lentas. Inspire por 4 segundos, segure por 4, expire por 6.',
           },
         ];
       case 'neutral':
         return [
           {
-            'icon': Icons.lightbulb,
-            'title': 'Experimente algo novo',
+            'icon': Icons.directions_walk,
+            'title': 'Mova-se um pouco',
             'description':
-                'Que tal aprender uma palavra nova, escutar uma música diferente ou experimentar um chá novo? Pequenas novidades animam o dia.',
+                'Faça alguns alongamentos ou uma caminhada curta. O movimento pode despertar energia positiva.',
           },
           {
-            'icon': Icons.fitness_center,
-            'title': 'Movimente-se',
+            'icon': Icons.music_note,
+            'title': 'Ouça uma música',
             'description':
-                'Faça alguns alongamentos, suba e desça escadas ou dance. O movimento físico melhora o humor naturalmente.',
+                'Coloque uma música que você gosta. A música tem poder de transformar nosso estado emocional.',
           },
           {
-            'icon': Icons.psychology,
-            'title': 'Pratique gratidão',
+            'icon': Icons.local_cafe,
+            'title': 'Faça uma pausa',
             'description':
-                'Pense em 3 coisas pelas quais você é grato hoje, por menores que sejam. Isso treina o cérebro para o positivo.',
+                'Tome um chá ou café. Use esse momento para se reconectar com você mesmo.',
           },
         ];
       case 'calm':
@@ -260,46 +645,40 @@ class EducationScreen extends StatelessWidget {
             'icon': Icons.spa,
             'title': 'Mantenha a serenidade',
             'description':
-                'Continue respirando profundamente e mantenha essa sensação de paz. Você está em um ótimo estado mental.',
+                'Continue praticando respiração profunda. Você está em um ótimo estado mental.',
+          },
+          {
+            'icon': Icons.book,
+            'title': 'Momento de reflexão',
+            'description':
+                'Aproveite essa calma para ler algumas páginas de um livro ou escrever em um diário.',
           },
           {
             'icon': Icons.nature,
-            'title': 'Conecte-se com o momento',
+            'title': 'Conecte-se com a natureza',
             'description':
-                'Pratique mindfulness: observe 5 coisas que você vê, 4 que escuta, 3 que sente, 2 que cheira e 1 que prova.',
-          },
-          {
-            'icon': Icons.menu_book,
-            'title': 'Leia algo inspirador',
-            'description':
-                'Um poema, uma citação ou algumas páginas de um livro que você gosta. Alimente sua mente com conteúdo positivo.',
+                'Se possível, passe alguns minutos observando a natureza ao seu redor.',
           },
         ];
       case 'stressed':
         return [
           {
-            'icon': Icons.air,
-            'title': 'Técnica de respiração 4-7-8',
-            'description':
-                'Inspire por 4 segundos, segure por 7, expire por 8. Repita 4 vezes. Essa técnica ativa o sistema nervoso parassimpático.',
-          },
-          {
             'icon': Icons.pause_circle,
-            'title': 'Faça uma pausa',
+            'title': 'Pare e respire',
             'description':
-                'Pare tudo por 5 minutos. Sente-se, feche os olhos e apenas respire. Não pense em tarefas, só respire.',
+                'Pare o que está fazendo por 2 minutos. Respire fundo e lembre-se: isso também vai passar.',
           },
           {
-            'icon': Icons.water_drop,
+            'icon': Icons.list_alt,
+            'title': 'Organize as prioridades',
+            'description':
+                'Escreva as 3 tarefas mais importantes. Foque apenas nelas e deixe o resto para depois.',
+          },
+          {
+            'icon': Icons.local_drink,
             'title': 'Hidrate-se',
             'description':
-                'Beba um copo de água gelada devagar. A desidratação pode piorar o estresse. Cuide do básico primeiro.',
-          },
-          {
-            'icon': Icons.schedule,
-            'title': 'Organize prioridades',
-            'description':
-                'Escreva 3 tarefas mais importantes do dia. Foque apenas nelas. O resto pode esperar.',
+                'Beba um copo de água gelada. A desidratação pode aumentar a sensação de estresse.',
           },
         ];
       default:

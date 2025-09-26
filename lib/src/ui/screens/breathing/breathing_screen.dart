@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../models/breathing_technique.dart';
 import '../../../services/breathing_repository.dart';
+import '../../../core/constants.dart';
 import 'breathing_session_screen.dart';
 
 class BreathingScreen extends StatefulWidget {
@@ -83,13 +84,13 @@ class _BreathingScreenState extends State<BreathingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text(
           'Respiração & Relaxamento',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        backgroundColor: const Color(0xFF2E7D32),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -98,11 +99,11 @@ class _BreathingScreenState extends State<BreathingScreen> {
           // Header com gradiente
           Container(
             width: double.infinity,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF2E7D32), Color(0xFF4CAF50)],
+                colors: [AppColors.primary, AppColors.serenity],
               ),
             ),
             child: Padding(
@@ -132,17 +133,17 @@ class _BreathingScreenState extends State<BreathingScreen> {
 
           // Filtros
           Container(
-            color: Colors.white,
+            color: AppColors.surfaceLight,
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Filtrar por:',
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF2E7D32),
+                    color: AppColors.primary,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -161,8 +162,8 @@ class _BreathingScreenState extends State<BreathingScreen> {
                           _applyFilters();
                         });
                       },
-                      backgroundColor: Colors.grey[100],
-                      selectedColor: const Color(0xFF4CAF50),
+                      backgroundColor: AppColors.surfaceLight,
+                      selectedColor: AppColors.serenity,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : Colors.grey[700],
                         fontWeight: isSelected
@@ -189,8 +190,8 @@ class _BreathingScreenState extends State<BreathingScreen> {
                           _applyFilters();
                         });
                       },
-                      backgroundColor: Colors.grey[100],
-                      selectedColor: const Color(0xFF2E7D32),
+                      backgroundColor: AppColors.surfaceLight,
+                      selectedColor: AppColors.primary,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : Colors.grey[700],
                         fontWeight: isSelected
@@ -252,10 +253,10 @@ class _BreathingScreenState extends State<BreathingScreen> {
                     children: [
                       Text(
                         technique.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF2E7D32),
+                          color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -326,17 +327,17 @@ class _BreathingScreenState extends State<BreathingScreen> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF4CAF50).withOpacity(0.1),
+                    color: AppColors.serenity.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: const Color(0xFF4CAF50).withOpacity(0.3),
+                      color: AppColors.serenity.withOpacity(0.3),
                     ),
                   ),
                   child: Text(
                     benefit,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF2E7D32),
+                      color: AppColors.primary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -355,7 +356,7 @@ class _BreathingScreenState extends State<BreathingScreen> {
                     icon: const Icon(Icons.play_arrow, size: 18),
                     label: const Text('Iniciar Sessão'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4CAF50),
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -371,8 +372,8 @@ class _BreathingScreenState extends State<BreathingScreen> {
                     icon: const Icon(Icons.video_library, size: 18),
                     label: const Text('Vídeo'),
                     style: OutlinedButton.styleFrom(
-                      foregroundColor: const Color(0xFF2E7D32),
-                      side: const BorderSide(color: Color(0xFF2E7D32)),
+                      foregroundColor: AppColors.complement,
+                      side: BorderSide(color: AppColors.complement),
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -391,17 +392,17 @@ class _BreathingScreenState extends State<BreathingScreen> {
   Color _getCategoryColor(String category) {
     switch (category) {
       case 'Anti-Estresse':
-        return const Color(0xFFE53935);
+        return AppColors.complement;
       case 'Relaxamento':
-        return const Color(0xFF5E35B1);
+        return AppColors.serenity;
       case 'Focalização':
-        return const Color(0xFF1E88E5);
+        return AppColors.primary;
       case 'Energizante':
-        return const Color(0xFFFF9800);
+        return AppColors.energy;
       case 'Para Dormir':
-        return const Color(0xFF3F51B5);
+        return AppColors.mindfulness;
       default:
-        return const Color(0xFF4CAF50);
+        return AppColors.primary;
     }
   }
 
@@ -425,13 +426,13 @@ class _BreathingScreenState extends State<BreathingScreen> {
   Color _getDifficultyColor(String difficulty) {
     switch (difficulty) {
       case 'Iniciante':
-        return const Color(0xFF4CAF50);
+        return AppColors.success;
       case 'Intermediário':
-        return const Color(0xFFFF9800);
+        return AppColors.warning;
       case 'Avançado':
-        return const Color(0xFFE53935);
+        return AppColors.error;
       default:
-        return Colors.grey;
+        return AppColors.textSecondary;
     }
   }
 }
