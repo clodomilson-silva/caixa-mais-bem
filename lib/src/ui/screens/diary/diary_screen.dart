@@ -65,7 +65,6 @@ class _DiaryScreenState extends State<DiaryScreen> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             onPressed: () => _showInfoDialog(),

@@ -269,7 +269,6 @@ class _BreathingSessionScreenState extends State<BreathingSessionScreen>
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: false,
         actions: [
           if (_isSessionActive && !_isPaused)
             IconButton(onPressed: _pauseSession, icon: const Icon(Icons.pause)),

@@ -14,7 +14,6 @@ class _MoodInsightsScreenState extends State<MoodInsightsScreen> {
       appBar: AppBar(
         title: const Text('Insights Pessoais'),
         backgroundColor: const Color(0xFF9C27B0),
-        automaticallyImplyLeading: false,
       ),
       body: const Center(
         child: Column(

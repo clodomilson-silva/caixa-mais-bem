@@ -56,7 +56,6 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
         centerTitle: true,
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.textOnPrimary,
-        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [

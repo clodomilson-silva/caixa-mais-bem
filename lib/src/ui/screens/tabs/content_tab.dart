@@ -8,13 +8,15 @@ class ContentTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final contents = [
       {'title': 'Ergonomia no caixa', 'subtitle': 'Dicas rápidas para postura'},
-      {'title': 'Alimentação e energia', 'subtitle': 'Lanches rápidos e saudáveis'}
+      {
+        'title': 'Alimentação e energia',
+        'subtitle': 'Lanches rápidos e saudáveis',
+      },
     ];
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Conteúdo educativo'),
-        automaticallyImplyLeading: false,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(12),
@@ -25,10 +27,15 @@ class ContentTab extends StatelessWidget {
             child: ListTile(
               title: Text(item['title']!),
               subtitle: Text(item['subtitle']!),
-              trailing: IconButton(icon: const Icon(Icons.arrow_forward), onPressed: () {
-                // TODO: abrir página de conteúdo
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Abrir conteúdo (em breve)')));
-              }),
+              trailing: IconButton(
+                icon: const Icon(Icons.arrow_forward),
+                onPressed: () {
+                  // TODO: abrir página de conteúdo
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Abrir conteúdo (em breve)')),
+                  );
+                },
+              ),
             ),
           );
         },

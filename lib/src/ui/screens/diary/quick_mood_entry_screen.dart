@@ -31,7 +31,6 @@ class _QuickMoodEntryScreenState extends State<QuickMoodEntryScreen> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        automaticallyImplyLeading: false,
         actions: [
           TextButton(
             onPressed: () => setState(() => _isDetailed = !_isDetailed),

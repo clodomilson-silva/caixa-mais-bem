@@ -14,7 +14,6 @@ class _WeeklyReflectionScreenState extends State<WeeklyReflectionScreen> {
       appBar: AppBar(
         title: const Text('Reflexão Semanal'),
         backgroundColor: const Color(0xFF9C27B0),
-        automaticallyImplyLeading: false,
       ),
       body: const Center(
         child: Column(

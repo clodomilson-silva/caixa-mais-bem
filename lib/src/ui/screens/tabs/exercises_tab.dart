@@ -6,15 +6,17 @@ class ExercisesTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = List.generate(5, (i) => {
-          'title': 'Alongamento rápido ${i + 1}',
-          'subtitle': 'Duração: 2 minutos',
-        });
+    final items = List.generate(
+      5,
+      (i) => {
+        'title': 'Alongamento rápido ${i + 1}',
+        'subtitle': 'Duração: 2 minutos',
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Exercícios'),
-        automaticallyImplyLeading: false,
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(12),
@@ -26,7 +28,9 @@ class ExercisesTab extends StatelessWidget {
             subtitle: item['subtitle']!,
             onPlay: () {
               // TODO: implementar player / tela de vídeo
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Reproduzir vídeo (em breve)')));
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Reproduzir vídeo (em breve)')),
+              );
             },
           );
         },
