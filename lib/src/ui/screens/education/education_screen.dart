@@ -34,6 +34,52 @@ class EducationScreen extends StatelessWidget {
     );
   }
 
+  // Função melhorada para abrir vídeos do YouTube
+  Future<void> _openVideoUrl(
+    BuildContext context,
+    String url,
+    String title,
+  ) async {
+    try {
+      final uri = Uri.parse(url);
+
+      // Primeiro tenta abrir com o app do YouTube
+      if (await canLaunchUrl(uri)) {
+        bool launched = await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
+
+        if (!launched) {
+          // Se falhou, tenta com modo platform default
+          launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+        }
+
+        if (!launched) {
+          // Último recurso: tenta abrir no navegador
+          await launchUrl(uri, mode: LaunchMode.inAppBrowserView);
+        }
+      } else {
+        // Se não consegue verificar, tenta forçar abertura
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Não foi possível abrir o vídeo: $title'),
+            backgroundColor: Colors.red,
+            action: SnackBarAction(
+              label: 'Tentar novamente',
+              textColor: Colors.white,
+              onPressed: () => _openVideoUrl(context, url, title),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   Widget _buildMoodSpecificContent() {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16.0),
@@ -303,35 +349,7 @@ class EducationScreen extends StatelessWidget {
       child: Builder(
         builder: (context) => InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () async {
-            final videoUrl = video['url'];
-            if (videoUrl != null) {
-              try {
-                final uri = Uri.parse(videoUrl);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
-                } else {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Não foi possível abrir o vídeo'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Erro ao abrir vídeo: ${video['title']}'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
-            }
-          },
+          onTap: () => _openVideoUrl(context, video['url']!, video['title']!),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
