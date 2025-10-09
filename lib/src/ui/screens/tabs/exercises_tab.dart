@@ -12,7 +12,10 @@ class ExercisesTab extends StatelessWidget {
         });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Exercícios')),
+      appBar: AppBar(
+        title: const Text('Exercícios'),
+        automaticallyImplyLeading: false,
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(12),
         itemCount: items.length,

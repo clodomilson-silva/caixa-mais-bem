@@ -52,6 +52,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen>
         backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: false,
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,

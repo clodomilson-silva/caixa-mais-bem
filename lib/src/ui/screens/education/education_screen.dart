@@ -19,6 +19,7 @@ class EducationScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Color(0xFF26A69A), // Teal principal
         foregroundColor: Colors.white,
+        automaticallyImplyLeading: false,
       ),
       body: moodType != null
           ? _buildMoodSpecificContent()

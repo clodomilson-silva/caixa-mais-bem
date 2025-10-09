@@ -23,7 +23,7 @@ class MoodRepository {
   // Salvar entrada de humor
   static Future<void> saveMoodEntry(MoodEntry entry) async {
     final userId = _getCurrentUserId();
-    
+
     if (userId != 'local_user') {
       // Salvar no Firebase com isolamento por usuário
       await _saveMoodEntryToFirebase(userId, entry);
@@ -37,7 +37,10 @@ class MoodRepository {
   }
 
   /// Salvar no Firebase
-  static Future<void> _saveMoodEntryToFirebase(String userId, MoodEntry entry) async {
+  static Future<void> _saveMoodEntryToFirebase(
+    String userId,
+    MoodEntry entry,
+  ) async {
     try {
       final entryId = 'mood_${DateTime.now().millisecondsSinceEpoch}';
       await AppFirebaseService.saveData(
@@ -65,7 +68,7 @@ class MoodRepository {
   // Obter todas as entradas
   static Future<List<MoodEntry>> getAllMoodEntries() async {
     final userId = _getCurrentUserId();
-    
+
     if (userId != 'local_user') {
       // Tentar carregar do Firebase primeiro
       try {
@@ -81,7 +84,9 @@ class MoodRepository {
   }
 
   /// Carregar do Firebase
-  static Future<List<MoodEntry>> _getAllMoodEntriesFromFirebase(String userId) async {
+  static Future<List<MoodEntry>> _getAllMoodEntriesFromFirebase(
+    String userId,
+  ) async {
     // TODO: Implementar carregamento de múltiplos documentos do Firebase
     // Por enquanto, usar SharedPreferences como fallback
     return await _getAllMoodEntriesLocally();

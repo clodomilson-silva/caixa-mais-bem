@@ -76,7 +76,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Criar Conta'), centerTitle: true),
+      appBar: AppBar(
+        title: const Text('Criar Conta'), 
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24.0),

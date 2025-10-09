@@ -12,7 +12,10 @@ class ContentTab extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Conteúdo educativo')),
+      appBar: AppBar(
+        title: const Text('Conteúdo educativo'),
+        automaticallyImplyLeading: false,
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.all(12),
         itemCount: contents.length,

@@ -48,6 +48,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Column(

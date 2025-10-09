@@ -14,6 +14,7 @@ class _MoodHistoryScreenState extends State<MoodHistoryScreen> {
       appBar: AppBar(
         title: const Text('Histórico de Humor'),
         backgroundColor: const Color(0xFF2196F3),
+        automaticallyImplyLeading: false,
       ),
       body: const Center(
         child: Column(

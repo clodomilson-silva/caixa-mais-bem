@@ -93,6 +93,7 @@ class _BreathingScreenState extends State<BreathingScreen> {
         backgroundColor: AppColors.primary,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        automaticallyImplyLeading: false,
       ),
       body: Column(
         children: [
