@@ -97,13 +97,18 @@ class MockFirebaseService {
   ) async {
     if (!_initialized) return;
 
-    _mockData['$collection/$docId'] = {
+    final key = '$collection/$docId';
+    final existingData = _mockData[key] ?? {};
+
+    // Fazer merge dos dados (preservar campos existentes)
+    _mockData[key] = {
+      ...existingData,
       ...data,
       'timestamp': DateTime.now().toIso8601String(),
     };
 
     if (kDebugMode) {
-      print('🔧 Mock save: $collection/$docId -> $data');
+      print('🔧 Mock save (merged): $collection/$docId -> $data');
     }
   }
 

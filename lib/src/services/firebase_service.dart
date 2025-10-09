@@ -62,7 +62,7 @@ class FirebaseService {
       final result = await _auth!.signInAnonymously();
       return result.user;
     } catch (e) {
-      print(' Erro ao fazer login anônimo: ');
+      print('❌ Erro ao fazer login anônimo: $e');
       return null;
     }
   }
@@ -71,9 +71,9 @@ class FirebaseService {
   static Future<void> signOut() async {
     try {
       await _auth?.signOut();
-      print(' Logout realizado com sucesso');
+      print('✅ Logout realizado com sucesso');
     } catch (e) {
-      print(' Erro ao fazer logout: ');
+      print('❌ Erro ao fazer logout: $e');
     }
   }
 
@@ -140,19 +140,27 @@ class FirebaseService {
     Map<String, dynamic> data,
   ) async {
     try {
-      await _firestore?.collection('users').doc(uid).set(data);
-      print(' Documento de usuário criado: ');
+      if (_firestore == null) {
+        print('❌ Firestore não inicializado');
+        return;
+      }
+      await _firestore!.collection('users').doc(uid).set(data);
+      print('✅ Documento de usuário criado: users/$uid');
     } catch (e) {
-      print(' Erro ao criar documento de usuário: ');
+      print('❌ Erro ao criar documento de usuário: $e');
     }
   }
 
   /// Obter dados do usuário
   static Future<DocumentSnapshot?> getUserDocument(String uid) async {
     try {
-      return await _firestore?.collection('users').doc(uid).get();
+      if (_firestore == null) {
+        print('❌ Firestore não inicializado');
+        return null;
+      }
+      return await _firestore!.collection('users').doc(uid).get();
     } catch (e) {
-      print(' Erro ao obter documento de usuário: ');
+      print('❌ Erro ao obter documento de usuário: $e');
       return null;
     }
   }
@@ -164,10 +172,18 @@ class FirebaseService {
     Map<String, dynamic> data,
   ) async {
     try {
-      await _firestore?.collection(collection).doc(docId).set(data);
-      print(' Dados salvos em /');
+      if (_firestore == null) {
+        print('❌ Firestore não inicializado');
+        return;
+      }
+      // Usar merge: true para preservar campos existentes
+      await _firestore!
+          .collection(collection)
+          .doc(docId)
+          .set(data, SetOptions(merge: true));
+      print('✅ Dados salvos em $collection/$docId');
     } catch (e) {
-      print(' Erro ao salvar dados: ');
+      print('❌ Erro ao salvar dados: $e');
     }
   }
 
@@ -179,7 +195,7 @@ class FirebaseService {
     try {
       return await _firestore?.collection(collection).doc(docId).get();
     } catch (e) {
-      print(' Erro ao obter dados: ');
+      print('❌ Erro ao obter dados: $e');
       return null;
     }
   }
@@ -192,7 +208,7 @@ class FirebaseService {
     try {
       return _firestore?.collection(collection).doc(docId).snapshots();
     } catch (e) {
-      print(' Erro ao criar stream de dados: ');
+      print('❌ Erro ao criar stream de dados: $e');
       return null;
     }
   }

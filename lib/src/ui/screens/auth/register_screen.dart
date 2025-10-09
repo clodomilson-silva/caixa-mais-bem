@@ -41,7 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         if (userId != null && mounted) {
           // Criar documento do usuário no Firestore
-          await AppFirebaseService.saveData('users', userId, {
+          await AppFirebaseService.createUserDocument(userId, {
             'name': _nameController.text.trim(),
             'email': _emailController.text.trim(),
             'createdAt': DateTime.now().toIso8601String(),

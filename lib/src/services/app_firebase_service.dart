@@ -14,6 +14,9 @@ class AppFirebaseService {
       _useMock = false;
       if (kDebugMode) {
         print('✅ Usando Firebase real');
+        print(
+          '💡 Nota: Se houver erro de permissão, o sistema mudará automaticamente para Mock',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -23,6 +26,15 @@ class AppFirebaseService {
       } else {
         rethrow;
       }
+    }
+  }
+
+  /// Retorna o status atual do serviço Firebase
+  static String get serviceStatus {
+    if (_useMock) {
+      return 'Mock (Desenvolvimento)';
+    } else {
+      return 'Firebase Real';
     }
   }
 
@@ -145,7 +157,25 @@ class AppFirebaseService {
     if (_useMock) {
       await MockFirebaseService.saveData(collection, docId, data);
     } else {
-      await FirebaseService.saveData(collection, docId, data);
+      try {
+        await FirebaseService.saveData(collection, docId, data);
+      } catch (e) {
+        // Se houver erro de permissão, fallback para Mock
+        if (e.toString().contains('permission-denied')) {
+          if (kDebugMode) {
+            print('🔥 FIREBASE PERMISSION DENIED - Mudando para Mock');
+            print(
+              '💡 Para resolver: Configurar regras do Firestore no console Firebase',
+            );
+            print('⚠️ Usando Mock temporariamente para desenvolvimento');
+          }
+          _useMock = true;
+          await MockFirebaseService.ensureInitialized();
+          await MockFirebaseService.saveData(collection, docId, data);
+        } else {
+          rethrow;
+        }
+      }
     }
   }
 
@@ -168,7 +198,25 @@ class AppFirebaseService {
     if (_useMock) {
       await MockFirebaseService.createUserDocument(uid, data);
     } else {
-      await FirebaseService.createUserDocument(uid, data);
+      try {
+        await FirebaseService.createUserDocument(uid, data);
+      } catch (e) {
+        // Se houver erro de permissão, fallback para Mock
+        if (e.toString().contains('permission-denied')) {
+          if (kDebugMode) {
+            print('🔥 FIREBASE PERMISSION DENIED - Mudando para Mock');
+            print(
+              '💡 Para resolver: Configurar regras do Firestore no console Firebase',
+            );
+            print('⚠️ Usando Mock temporariamente para desenvolvimento');
+          }
+          _useMock = true;
+          await MockFirebaseService.ensureInitialized();
+          await MockFirebaseService.createUserDocument(uid, data);
+        } else {
+          rethrow;
+        }
+      }
     }
   }
 
@@ -176,8 +224,25 @@ class AppFirebaseService {
     if (_useMock) {
       return await MockFirebaseService.getUserDocument(uid);
     } else {
-      final doc = await FirebaseService.getUserDocument(uid);
-      return doc?.data() as Map<String, dynamic>?;
+      try {
+        final doc = await FirebaseService.getUserDocument(uid);
+        return doc?.data() as Map<String, dynamic>?;
+      } catch (e) {
+        // Se houver erro de permissão, fallback para Mock
+        if (e.toString().contains('permission-denied')) {
+          if (kDebugMode) {
+            print('🔥 FIREBASE PERMISSION DENIED - Mudando para Mock');
+            print(
+              '💡 Para resolver: Configurar regras do Firestore no console Firebase',
+            );
+            print('⚠️ Usando Mock temporariamente para desenvolvimento');
+          }
+          _useMock = true;
+          await MockFirebaseService.ensureInitialized();
+          return await MockFirebaseService.getUserDocument(uid);
+        }
+        rethrow;
+      }
     }
   }
 

@@ -28,12 +28,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final currentUserId = AppFirebaseService.currentUser;
+      final isLoggedIn = AppFirebaseService.isLoggedIn;
+      final serviceStatus = AppFirebaseService.serviceStatus;
+
+      print('🔧 Debug ProfileScreen - Current User ID: $currentUserId');
+      print('🔧 Debug ProfileScreen - Is Logged In: $isLoggedIn');
+      print('🔧 Debug ProfileScreen - Service Status: $serviceStatus');
+
       if (currentUserId != null) {
-        final userData = await AppFirebaseService.getUserDocument(currentUserId);
-        
+        final userData = await AppFirebaseService.getUserDocument(
+          currentUserId,
+        );
+
+        print('🔧 Debug ProfileScreen - User Data: $userData');
+
         if (userData != null) {
           setState(() {
             _nameController.text = userData['name'] ?? '';
@@ -43,9 +54,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _notificationsEnabled = userData['notificationsEnabled'] ?? true;
             _shareProgress = userData['shareProgress'] ?? false;
           });
+          print('🔧 Debug ProfileScreen - Data loaded successfully');
+        } else {
+          print('🔧 Debug ProfileScreen - No user data found');
         }
+      } else {
+        print('🔧 Debug ProfileScreen - No current user');
       }
     } catch (e) {
+      print('🔧 Debug ProfileScreen - Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Erro ao carregar dados: $e'),
@@ -99,9 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 children: [
@@ -518,7 +533,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _saveProfile() async {
     try {
       final currentUserId = AppFirebaseService.currentUser;
+      print('🔧 Debug SaveProfile - Current User ID: $currentUserId');
+
       if (currentUserId != null) {
+        // Dados a serem atualizados (não sobrescreve campos existentes)
         final userData = {
           'name': _nameController.text.trim(),
           'email': _emailController.text.trim(),
@@ -529,7 +547,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'updatedAt': DateTime.now().toIso8601String(),
         };
 
+        print('🔧 Debug SaveProfile - Saving data: $userData');
         await AppFirebaseService.saveData('users', currentUserId, userData);
+        print('🔧 Debug SaveProfile - Data saved successfully');
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -538,8 +558,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             behavior: SnackBarBehavior.floating,
           ),
         );
+      } else {
+        print('🔧 Debug SaveProfile - No current user to save');
       }
     } catch (e) {
+      print('🔧 Debug SaveProfile - Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Erro ao salvar perfil: $e'),

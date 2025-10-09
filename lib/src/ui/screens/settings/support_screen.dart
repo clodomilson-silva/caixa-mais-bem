@@ -13,7 +13,7 @@ class _SupportScreenState extends State<SupportScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _messageController = TextEditingController();
-  final _emailController = TextEditingController(text: 'usuario@caixabank.com');
+  final _emailController = TextEditingController(text: 'seuemail@exemplo.com');
 
   @override
   void initState() {
@@ -274,7 +274,7 @@ class _SupportScreenState extends State<SupportScreen>
           const SizedBox(height: 20),
           _buildContactOption(
             'WhatsApp Business',
-            '+55 11 9999-9999',
+            '+55 98 98510-2248',
             Icons.chat,
             AppColors.success,
             () => _launchWhatsApp(),
@@ -282,7 +282,7 @@ class _SupportScreenState extends State<SupportScreen>
           const SizedBox(height: 16),
           _buildContactOption(
             'Email Direto',
-            'suporte.bemestar@caixabank.com',
+            'profclodomilson@gmail.com',
             Icons.email,
             AppColors.vitality,
             () => _launchEmail(),
@@ -559,13 +559,16 @@ class _SupportScreenState extends State<SupportScreen>
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 1.2,
+              childAspectRatio:
+                  1.0, // Mudança: de 1.2 para 1.0 para dar mais altura
             ),
             itemCount: features.length,
             itemBuilder: (context, index) {
               final feature = features[index];
               return Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(
+                  12,
+                ), // Mudança: de 16 para 12 para economizar espaço
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
@@ -584,25 +587,37 @@ class _SupportScreenState extends State<SupportScreen>
                     Icon(
                       feature['icon'] as IconData,
                       color: AppColors.primary,
-                      size: 32,
+                      size: 28, // Mudança: de 32 para 28 para economizar espaço
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      feature['title'] as String,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(height: 6), // Mudança: de 8 para 6
+                    Flexible(
+                      // Adicionado: Flexible para permitir quebra de texto
+                      child: Text(
+                        feature['title'] as String,
+                        style: const TextStyle(
+                          fontSize: 13, // Mudança: de 14 para 13
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2, // Adicionado: máximo 2 linhas
+                        overflow: TextOverflow
+                            .ellipsis, // Adicionado: truncar se necessário
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      feature['desc'] as String,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: AppColors.textSecondary,
+                    const SizedBox(height: 3), // Mudança: de 4 para 3
+                    Flexible(
+                      // Adicionado: Flexible para permitir quebra de texto
+                      child: Text(
+                        feature['desc'] as String,
+                        style: TextStyle(
+                          fontSize: 11, // Mudança: de 12 para 11
+                          color: AppColors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2, // Adicionado: máximo 2 linhas
+                        overflow: TextOverflow
+                            .ellipsis, // Adicionado: truncar se necessário
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
@@ -717,19 +732,47 @@ class _SupportScreenState extends State<SupportScreen>
       return;
     }
 
-    // TODO: Implementar envio real de mensagem
+    // Enviar mensagem via email
+    final String subject = Uri.encodeComponent(
+      'Suporte Caixa Mais Bem - Formulário de Contato',
+    );
+    final String body = Uri.encodeComponent(
+      'Email do usuário: ${_emailController.text}\n\n'
+      'Mensagem:\n${_messageController.text}',
+    );
+    final String emailUrl =
+        'mailto:profclodomilson@gmail.com?subject=$subject&body=$body';
+
+    _launchUrl(emailUrl);
+
     _messageController.clear();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: const Text('Mensagem enviada com sucesso!'),
+        content: const Text('Cliente de email aberto com sua mensagem!'),
         backgroundColor: AppColors.success,
         behavior: SnackBarBehavior.floating,
       ),
     );
   }
 
+  // Função auxiliar para abrir URLs
+  void _launchUrl(String url) async {
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Não foi possível abrir o link'),
+            backgroundColor: AppColors.error,
+          ),
+        );
+      }
+    }
+  }
+
   void _launchWhatsApp() async {
-    const url = 'https://wa.me/5511999999999';
+    const url = 'https://wa.me/5598985102248';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     }
@@ -737,7 +780,7 @@ class _SupportScreenState extends State<SupportScreen>
 
   void _launchEmail() async {
     const url =
-        'mailto:suporte.bemestar@caixabank.com?subject=Suporte Caixa Mais Bem';
+        'mailto:profclodomilson@gmail.com?subject=Suporte Caixa Mais Bem';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     }
