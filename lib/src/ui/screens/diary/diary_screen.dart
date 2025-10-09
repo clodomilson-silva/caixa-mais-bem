@@ -748,11 +748,16 @@ class _DiaryScreenState extends State<DiaryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Row(
+        title: Row(
           children: [
-            Icon(Icons.info, color: Color(0xFFFF7043)),
-            SizedBox(width: 8),
-            Text('Sobre o Diário Emocional'),
+            const Icon(Icons.info, color: Color(0xFFFF7043)),
+            const SizedBox(width: 8),
+            Expanded(
+              child: const Text(
+                'Sobre o Diário Emocional',
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
         content: const Text(
