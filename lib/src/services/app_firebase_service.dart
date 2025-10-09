@@ -26,6 +26,14 @@ class AppFirebaseService {
     }
   }
 
+  /// Verifica se deve usar Mock devido a API key inválida
+  static bool _shouldUseMockForAuth(dynamic error) {
+    final errorString = error.toString().toLowerCase();
+    return errorString.contains('api-key-not-valid') ||
+        errorString.contains('invalid-api-key') ||
+        errorString.contains('api_key_invalid');
+  }
+
   /// Getter para saber qual serviço está sendo usado
   static bool get isUsingMock => _useMock;
   static bool get isUsingReal => !_useMock;
@@ -59,11 +67,24 @@ class AppFirebaseService {
         password,
       );
     } else {
-      final user = await FirebaseService.signInWithEmailAndPassword(
-        email,
-        password,
-      );
-      return user?.uid;
+      try {
+        final user = await FirebaseService.signInWithEmailAndPassword(
+          email,
+          password,
+        );
+        return user?.uid;
+      } catch (e) {
+        if (_shouldUseMockForAuth(e)) {
+          if (kDebugMode) {
+            print('🔄 API key inválida, usando Mock para login: $email');
+          }
+          return await MockFirebaseService.signInWithEmailAndPassword(
+            email,
+            password,
+          );
+        }
+        rethrow;
+      }
     }
   }
 
@@ -78,11 +99,24 @@ class AppFirebaseService {
         password,
       );
     } else {
-      final user = await FirebaseService.createUserWithEmailAndPassword(
-        email,
-        password,
-      );
-      return user?.uid;
+      try {
+        final user = await FirebaseService.createUserWithEmailAndPassword(
+          email,
+          password,
+        );
+        return user?.uid;
+      } catch (e) {
+        if (_shouldUseMockForAuth(e)) {
+          if (kDebugMode) {
+            print('🔄 API key inválida, usando Mock para registro: $email');
+          }
+          return await MockFirebaseService.createUserWithEmailAndPassword(
+            email,
+            password,
+          );
+        }
+        rethrow;
+      }
     }
   }
 

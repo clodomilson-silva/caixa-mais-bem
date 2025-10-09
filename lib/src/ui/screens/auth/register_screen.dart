@@ -41,15 +41,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         if (userId != null && mounted) {
           // Criar documento do usuário no Firestore
-          await AppFirebaseService.saveData(
-            'users',
-            userId,
-            {
-              'name': _nameController.text.trim(),
-              'email': _emailController.text.trim(),
-              'createdAt': DateTime.now().toIso8601String(),
-            },
-          );
+          await AppFirebaseService.saveData('users', userId, {
+            'name': _nameController.text.trim(),
+            'email': _emailController.text.trim(),
+            'createdAt': DateTime.now().toIso8601String(),
+          });
 
           // Navegar para a tela principal
           Navigator.pushReplacementNamed(context, '/main');
@@ -66,10 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(e.toString()),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
           );
         }
       } finally {
