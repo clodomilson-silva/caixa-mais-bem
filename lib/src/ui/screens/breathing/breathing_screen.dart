@@ -7,7 +7,7 @@ import 'breathing_session_screen.dart';
 
 class BreathingScreen extends StatefulWidget {
   final bool showAppBar;
-  
+
   const BreathingScreen({super.key, this.showAppBar = true});
 
   @override
@@ -87,15 +87,20 @@ class _BreathingScreenState extends State<BreathingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: widget.showAppBar ? AppBar(
-        title: const Text(
-          'Respiração & Relaxamento',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ) : null,
+      appBar: widget.showAppBar
+          ? AppBar(
+              title: const Text(
+                'Respiração & Relaxamento',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              backgroundColor: AppColors.primary,
+              elevation: 0,
+              iconTheme: const IconThemeData(color: Colors.white),
+            )
+          : null,
       body: Column(
         children: [
           // Header com gradiente

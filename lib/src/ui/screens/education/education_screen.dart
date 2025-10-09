@@ -7,8 +7,8 @@ class EducationScreen extends StatelessWidget {
   final bool showAppBar;
 
   const EducationScreen({
-    super.key, 
-    this.moodType, 
+    super.key,
+    this.moodType,
     this.moodLabel,
     this.showAppBar = true,
   });
@@ -16,16 +16,18 @@ class EducationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: showAppBar ? AppBar(
-        title: Text(
-          moodType != null
-              ? 'Dicas para quando estiver $moodLabel'
-              : 'Vídeos Educativos',
-        ),
-        centerTitle: true,
-        backgroundColor: Color(0xFF26A69A), // Teal principal
-        foregroundColor: Colors.white,
-      ) : null,
+      appBar: showAppBar
+          ? AppBar(
+              title: Text(
+                moodType != null
+                    ? 'Dicas para quando estiver $moodLabel'
+                    : 'Vídeos Educativos',
+              ),
+              centerTitle: true,
+              backgroundColor: Color(0xFF26A69A), // Teal principal
+              foregroundColor: Colors.white,
+            )
+          : null,
       body: moodType != null
           ? _buildMoodSpecificContent()
           : _buildGeneralContent(),

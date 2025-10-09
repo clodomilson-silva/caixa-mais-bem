@@ -6,7 +6,7 @@ import '../../../core/constants.dart';
 
 class ExercisesScreen extends StatefulWidget {
   final bool showAppBar;
-  
+
   const ExercisesScreen({super.key, this.showAppBar = true});
 
   @override
@@ -53,12 +53,14 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: widget.showAppBar ? AppBar(
-        title: const Text('Exercícios e Dicas'),
-        centerTitle: true,
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.textOnPrimary,
-      ) : null,
+      appBar: widget.showAppBar
+          ? AppBar(
+              title: const Text('Exercícios e Dicas'),
+              centerTitle: true,
+              backgroundColor: AppColors.primary,
+              foregroundColor: AppColors.textOnPrimary,
+            )
+          : null,
       body: Column(
         children: [
           // Filtro por categoria
