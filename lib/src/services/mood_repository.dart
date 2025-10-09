@@ -374,10 +374,10 @@ class MoodRepository {
   // Limpar todos os dados do usuário atual (para testes ou reset)
   static Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(await _getUserSpecificKey(_moodEntriesKey));
-    await prefs.remove(await _getUserSpecificKey(_weeklyReflectionsKey));
-    await prefs.remove(await _getUserSpecificKey(_streakKey));
-    await prefs.remove(await _getUserSpecificKey(_lastEntryDateKey));
+    await prefs.remove(_getUserSpecificKey(_moodEntriesKey));
+    await prefs.remove(_getUserSpecificKey(_weeklyReflectionsKey));
+    await prefs.remove(_getUserSpecificKey(_streakKey));
+    await prefs.remove(_getUserSpecificKey(_lastEntryDateKey));
   }
 
   // Obter perguntas reflexivas da semana
