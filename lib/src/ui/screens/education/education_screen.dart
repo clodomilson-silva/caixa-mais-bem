@@ -4,13 +4,19 @@ import 'package:url_launcher/url_launcher.dart';
 class EducationScreen extends StatelessWidget {
   final String? moodType;
   final String? moodLabel;
+  final bool showAppBar;
 
-  const EducationScreen({super.key, this.moodType, this.moodLabel});
+  const EducationScreen({
+    super.key, 
+    this.moodType, 
+    this.moodLabel,
+    this.showAppBar = true,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: showAppBar ? AppBar(
         title: Text(
           moodType != null
               ? 'Dicas para quando estiver $moodLabel'
@@ -19,7 +25,7 @@ class EducationScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Color(0xFF26A69A), // Teal principal
         foregroundColor: Colors.white,
-      ),
+      ) : null,
       body: moodType != null
           ? _buildMoodSpecificContent()
           : _buildGeneralContent(),

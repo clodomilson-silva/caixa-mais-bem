@@ -19,10 +19,10 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _screens = [
     const HomeTab(),
-    const ExercisesScreen(),
-    const BreathingScreen(),
-    const DiaryScreen(),
-    const EducationScreen(),
+    const ExercisesScreen(showAppBar: false),
+    const BreathingScreen(showAppBar: false),
+    const DiaryScreen(showAppBar: false),
+    const EducationScreen(showAppBar: false),
   ];
 
   void _onItemTapped(int index) {
@@ -33,7 +33,37 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Títulos das tabs para o AppBar
+    final List<String> titles = [
+      'Caixa Mais Bem',
+      'Exercícios e Dicas', 
+      'Respiração & Relaxamento',
+      'Diário Emocional',
+      'Vídeos Educativos',
+    ];
+    
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove ícone de volta
+        title: Text(titles[_selectedIndex]),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications),
+            onPressed: () {
+              // TODO: Implementar notificações
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              _showSettingsMenu(context);
+            },
+          ),
+        ],
+      ),
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -52,6 +82,164 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Educação'),
         ],
       ),
+    );
+  }
+
+  void _showSettingsMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Configurações',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              _buildMenuOption(
+                context,
+                icon: Icons.person,
+                title: 'Perfil',
+                subtitle: 'Gerenciar informações pessoais',
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfileScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildMenuOption(
+                context,
+                icon: Icons.notifications,
+                title: 'Notificações',
+                subtitle: 'Configurar alertas e lembretes',
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationsScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildMenuOption(
+                context,
+                icon: Icons.support_agent,
+                title: 'Suporte',
+                subtitle: 'Ajuda e contato',
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SupportScreen(),
+                    ),
+                  );
+                },
+              ),
+              _buildMenuOption(
+                context,
+                icon: Icons.exit_to_app,
+                title: 'Sair',
+                subtitle: 'Fazer logout da conta',
+                onTap: () {
+                  Navigator.pop(context);
+                  _showLogoutDialog(context);
+                },
+                isDestructive: true,
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuOption(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    return ListTile(
+      leading: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: isDestructive
+              ? Colors.red.withOpacity(0.1)
+              : Theme.of(context).primaryColor.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(
+          icon,
+          color: isDestructive ? Colors.red : Theme.of(context).primaryColor,
+        ),
+      ),
+      title: Text(
+        title,
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: isDestructive ? Colors.red : null,
+        ),
+      ),
+      subtitle: Text(subtitle),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: Colors.grey[400],
+      ),
+      onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Confirmar Saída'),
+          content: const Text('Tem certeza que deseja sair da sua conta?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+              child: const Text(
+                'Sair',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

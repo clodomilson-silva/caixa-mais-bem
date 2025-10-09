@@ -10,7 +10,9 @@ import '../breathing/breathing_screen.dart';
 import '../exercises/exercises_screen.dart';
 
 class DiaryScreen extends StatefulWidget {
-  const DiaryScreen({super.key});
+  final bool showAppBar;
+  
+  const DiaryScreen({super.key, this.showAppBar = true});
 
   @override
   State<DiaryScreen> createState() => _DiaryScreenState();
@@ -57,7 +59,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
+      appBar: widget.showAppBar ? AppBar(
         title: const Text(
           'Diário Emocional',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -71,7 +73,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
             icon: const Icon(Icons.info_outline),
           ),
         ],
-      ),
+      ) : null,
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(

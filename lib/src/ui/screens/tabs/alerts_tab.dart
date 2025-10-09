@@ -16,9 +16,7 @@ class _AlertsTabState extends State<AlertsTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Alertas e Lembretes'),
-      ),
+      appBar: AppBar(title: const Text('Alertas e Lembretes')),
       body: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
