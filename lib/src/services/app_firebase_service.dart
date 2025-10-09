@@ -48,6 +48,44 @@ class AppFirebaseService {
     }
   }
 
+  /// Login com email e senha
+  static Future<String?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    if (_useMock) {
+      return await MockFirebaseService.signInWithEmailAndPassword(
+        email,
+        password,
+      );
+    } else {
+      final user = await FirebaseService.signInWithEmailAndPassword(
+        email,
+        password,
+      );
+      return user?.uid;
+    }
+  }
+
+  /// Cadastro com email e senha
+  static Future<String?> createUserWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    if (_useMock) {
+      return await MockFirebaseService.createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+    } else {
+      final user = await FirebaseService.createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      return user?.uid;
+    }
+  }
+
   static String? get currentUser {
     if (_useMock) {
       return MockFirebaseService.currentUser;

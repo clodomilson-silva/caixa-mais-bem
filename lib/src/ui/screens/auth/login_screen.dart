@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/custom_text_field.dart';
 import '../../../core/constants.dart';
+import '../../../services/app_firebase_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -28,17 +29,32 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() => _isLoading = true);
 
       try {
-        // TODO: Implementar login com Firebase Auth
-        await Future.delayed(const Duration(seconds: 2)); // Simula login
+        // Login com Firebase Auth
+        final userId = await AppFirebaseService.signInWithEmailAndPassword(
+          _emailController.text.trim(),
+          _passwordController.text,
+        );
 
-        if (mounted) {
+        if (userId != null && mounted) {
           Navigator.pushReplacementNamed(context, '/main');
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Erro inesperado ao fazer login'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
       } catch (e) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text('Erro ao fazer login: $e')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.toString()),
+              backgroundColor: Colors.red,
+            ),
+          );
         }
       } finally {
         if (mounted) {

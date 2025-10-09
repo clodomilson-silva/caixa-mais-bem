@@ -77,6 +77,63 @@ class FirebaseService {
     }
   }
 
+  /// Login com email e senha
+  static Future<User?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final result = await _auth!.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      print('✅ Login realizado com sucesso: ${result.user?.email}');
+      return result.user;
+    } catch (e) {
+      print('❌ Erro ao fazer login: $e');
+      throw _handleAuthException(e);
+    }
+  }
+
+  /// Cadastro com email e senha
+  static Future<User?> createUserWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final result = await _auth!.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      print('✅ Usuário criado com sucesso: ${result.user?.email}');
+      return result.user;
+    } catch (e) {
+      print('❌ Erro ao criar usuário: $e');
+      throw _handleAuthException(e);
+    }
+  }
+
+  /// Tratar exceções de autenticação
+  static String _handleAuthException(dynamic e) {
+    if (e.toString().contains('user-not-found')) {
+      return 'Usuário não encontrado. Verifique o email informado.';
+    } else if (e.toString().contains('wrong-password')) {
+      return 'Senha incorreta. Tente novamente.';
+    } else if (e.toString().contains('invalid-email')) {
+      return 'Email inválido. Verifique o formato do email.';
+    } else if (e.toString().contains('email-already-in-use')) {
+      return 'Este email já está sendo usado por outra conta.';
+    } else if (e.toString().contains('weak-password')) {
+      return 'A senha é muito fraca. Use pelo menos 6 caracteres.';
+    } else if (e.toString().contains('invalid-credential')) {
+      return 'Credenciais inválidas. Verifique email e senha.';
+    } else if (e.toString().contains('too-many-requests')) {
+      return 'Muitas tentativas. Tente novamente mais tarde.';
+    } else {
+      return 'Erro de autenticação: ${e.toString()}';
+    }
+  }
+
   /// Criar documento de usuário no Firestore
   static Future<void> createUserDocument(
     String uid,

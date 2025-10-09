@@ -36,6 +36,54 @@ class MockFirebaseService {
     }
   }
 
+  /// Mock login com email e senha
+  static Future<String?> signInWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    if (!_initialized) return null;
+
+    // Lista de usuários válidos para teste
+    final validUsers = {
+      'admin@caixamaisbem.com': 'admin123',
+      'test@caixamaisbem.com': 'test123',
+      'user@caixamaisbem.com': 'user123',
+      'demo@caixamaisbem.com': 'demo123',
+    };
+
+    if (validUsers.containsKey(email) && validUsers[email] == password) {
+      final userId = 'mock_user_${email.split('@')[0]}';
+      _mockUsers.add(userId);
+
+      if (kDebugMode) {
+        print('🔧 Mock login bem-sucedido: $email -> $userId');
+      }
+      return userId;
+    } else {
+      if (kDebugMode) {
+        print('🔧 Mock login falhou: credenciais inválidas para $email');
+      }
+      throw 'Credenciais inválidas. Verifique email e senha.';
+    }
+  }
+
+  /// Mock cadastro com email e senha
+  static Future<String?> createUserWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    if (!_initialized) return null;
+
+    // Simula criação de novo usuário
+    final userId = 'mock_new_user_${DateTime.now().millisecondsSinceEpoch}';
+    _mockUsers.add(userId);
+
+    if (kDebugMode) {
+      print('🔧 Mock usuário criado: $email -> $userId');
+    }
+    return userId;
+  }
+
   static String? get currentUser =>
       _mockUsers.isNotEmpty ? _mockUsers.last : null;
 
