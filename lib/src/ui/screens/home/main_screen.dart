@@ -281,6 +281,7 @@ class _HomeTabState extends State<HomeTab> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false, // Remove ícone de volta
         title: const Text('Caixa Mais Bem'),
         centerTitle: true,
         actions: [

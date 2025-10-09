@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/mood_entry.dart';
+import 'app_firebase_service.dart';
 
 class MoodRepository {
   static const String _moodEntriesKey = 'mood_entries';
@@ -8,23 +9,89 @@ class MoodRepository {
   static const String _streakKey = 'mood_streak';
   static const String _lastEntryDateKey = 'last_entry_date';
 
+  /// Obter ID do usuário atual (com fallback para SharedPreferences local)
+  static String _getCurrentUserId() {
+    final userId = AppFirebaseService.currentUser;
+    return userId ?? 'local_user'; // Fallback para usuário local
+  }
+
+  /// Obter chave específica do usuário
+  static String _getUserSpecificKey(String baseKey) {
+    return '${_getCurrentUserId()}_$baseKey';
+  }
+
   // Salvar entrada de humor
   static Future<void> saveMoodEntry(MoodEntry entry) async {
-    final prefs = await SharedPreferences.getInstance();
-    final entries = await getAllMoodEntries();
-    entries.add(entry);
-
-    final entriesJson = entries.map((e) => e.toJson()).toList();
-    await prefs.setString(_moodEntriesKey, jsonEncode(entriesJson));
+    final userId = _getCurrentUserId();
+    
+    if (userId != 'local_user') {
+      // Salvar no Firebase com isolamento por usuário
+      await _saveMoodEntryToFirebase(userId, entry);
+    } else {
+      // Fallback para SharedPreferences com chave do usuário
+      await _saveMoodEntryLocally(entry);
+    }
 
     // Atualizar streak
     await _updateStreak();
   }
 
+  /// Salvar no Firebase
+  static Future<void> _saveMoodEntryToFirebase(String userId, MoodEntry entry) async {
+    try {
+      final entryId = 'mood_${DateTime.now().millisecondsSinceEpoch}';
+      await AppFirebaseService.saveData(
+        'users/$userId/mood_entries',
+        entryId,
+        entry.toJson(),
+      );
+    } catch (e) {
+      // Se falhar no Firebase, usar SharedPreferences como backup
+      await _saveMoodEntryLocally(entry);
+    }
+  }
+
+  /// Salvar localmente (com user-specific key)
+  static Future<void> _saveMoodEntryLocally(MoodEntry entry) async {
+    final prefs = await SharedPreferences.getInstance();
+    final entries = await getAllMoodEntries();
+    entries.add(entry);
+
+    final entriesJson = entries.map((e) => e.toJson()).toList();
+    final userKey = _getUserSpecificKey(_moodEntriesKey);
+    await prefs.setString(userKey, jsonEncode(entriesJson));
+  }
+
   // Obter todas as entradas
   static Future<List<MoodEntry>> getAllMoodEntries() async {
+    final userId = _getCurrentUserId();
+    
+    if (userId != 'local_user') {
+      // Tentar carregar do Firebase primeiro
+      try {
+        return await _getAllMoodEntriesFromFirebase(userId);
+      } catch (e) {
+        // Se falhar, usar SharedPreferences como backup
+        return await _getAllMoodEntriesLocally();
+      }
+    } else {
+      // Usar SharedPreferences com chave do usuário
+      return await _getAllMoodEntriesLocally();
+    }
+  }
+
+  /// Carregar do Firebase
+  static Future<List<MoodEntry>> _getAllMoodEntriesFromFirebase(String userId) async {
+    // TODO: Implementar carregamento de múltiplos documentos do Firebase
+    // Por enquanto, usar SharedPreferences como fallback
+    return await _getAllMoodEntriesLocally();
+  }
+
+  /// Carregar localmente (com user-specific key)
+  static Future<List<MoodEntry>> _getAllMoodEntriesLocally() async {
     final prefs = await SharedPreferences.getInstance();
-    final entriesString = prefs.getString(_moodEntriesKey);
+    final userKey = _getUserSpecificKey(_moodEntriesKey);
+    final entriesString = prefs.getString(userKey);
 
     if (entriesString == null) return [];
 
@@ -135,7 +202,8 @@ class MoodRepository {
   // Obter streak atual
   static Future<int> getCurrentStreak() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_streakKey) ?? 0;
+    final userKey = _getUserSpecificKey(_streakKey);
+    return prefs.getInt(userKey) ?? 0;
   }
 
   // Atualizar streak
@@ -143,12 +211,14 @@ class MoodRepository {
     final prefs = await SharedPreferences.getInstance();
     final today = DateTime.now();
     final todayString = '${today.year}-${today.month}-${today.day}';
-    final lastEntryDateString = prefs.getString(_lastEntryDateKey);
+    final userLastEntryKey = _getUserSpecificKey(_lastEntryDateKey);
+    final lastEntryDateString = prefs.getString(userLastEntryKey);
 
     if (lastEntryDateString == null) {
       // Primeira entrada
-      await prefs.setInt(_streakKey, 1);
-      await prefs.setString(_lastEntryDateKey, todayString);
+      final userStreakKey = _getUserSpecificKey(_streakKey);
+      await prefs.setInt(userStreakKey, 1);
+      await prefs.setString(userLastEntryKey, todayString);
       return;
     }
 
@@ -160,15 +230,17 @@ class MoodRepository {
         lastEntryDate.year == yesterday.year) {
       // Continuando streak
       final currentStreak = await getCurrentStreak();
-      await prefs.setInt(_streakKey, currentStreak + 1);
+      final userStreakKey = _getUserSpecificKey(_streakKey);
+      await prefs.setInt(userStreakKey, currentStreak + 1);
     } else if (lastEntryDate.day != today.day ||
         lastEntryDate.month != today.month ||
         lastEntryDate.year != today.year) {
       // Quebrou o streak ou é o primeiro do dia
-      await prefs.setInt(_streakKey, 1);
+      final userStreakKey = _getUserSpecificKey(_streakKey);
+      await prefs.setInt(userStreakKey, 1);
     }
 
-    await prefs.setString(_lastEntryDateKey, todayString);
+    await prefs.setString(userLastEntryKey, todayString);
   }
 
   // Salvar reflexão semanal
@@ -178,13 +250,15 @@ class MoodRepository {
     reflections.add(reflection);
 
     final reflectionsJson = reflections.map((r) => r.toJson()).toList();
-    await prefs.setString(_weeklyReflectionsKey, jsonEncode(reflectionsJson));
+    final userKey = _getUserSpecificKey(_weeklyReflectionsKey);
+    await prefs.setString(userKey, jsonEncode(reflectionsJson));
   }
 
   // Obter todas as reflexões semanais
   static Future<List<WeeklyReflection>> getAllWeeklyReflections() async {
     final prefs = await SharedPreferences.getInstance();
-    final reflectionsString = prefs.getString(_weeklyReflectionsKey);
+    final userKey = _getUserSpecificKey(_weeklyReflectionsKey);
+    final reflectionsString = prefs.getString(userKey);
 
     if (reflectionsString == null) return [];
 
@@ -297,13 +371,13 @@ class MoodRepository {
     };
   }
 
-  // Limpar todos os dados (para testes ou reset)
+  // Limpar todos os dados do usuário atual (para testes ou reset)
   static Future<void> clearAllData() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_moodEntriesKey);
-    await prefs.remove(_weeklyReflectionsKey);
-    await prefs.remove(_streakKey);
-    await prefs.remove(_lastEntryDateKey);
+    await prefs.remove(await _getUserSpecificKey(_moodEntriesKey));
+    await prefs.remove(await _getUserSpecificKey(_weeklyReflectionsKey));
+    await prefs.remove(await _getUserSpecificKey(_streakKey));
+    await prefs.remove(await _getUserSpecificKey(_lastEntryDateKey));
   }
 
   // Obter perguntas reflexivas da semana
