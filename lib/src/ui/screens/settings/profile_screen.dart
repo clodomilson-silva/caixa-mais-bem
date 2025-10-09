@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants.dart';
+import '../../../services/app_firebase_service.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -9,18 +10,52 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final _nameController = TextEditingController(text: 'Maria Silva');
-  final _emailController = TextEditingController(
-    text: 'maria.silva@caixabank.com',
-  );
-  final _jobController = TextEditingController(text: 'Analista de Sistemas');
-  final _departmentController = TextEditingController(
-    text: 'TI - Desenvolvimento',
-  );
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _jobController = TextEditingController();
+  final _departmentController = TextEditingController();
 
   bool _isEditing = false;
   bool _notificationsEnabled = true;
   bool _shareProgress = false;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    setState(() => _isLoading = true);
+    
+    try {
+      final currentUserId = AppFirebaseService.currentUser;
+      if (currentUserId != null) {
+        final userData = await AppFirebaseService.getUserDocument(currentUserId);
+        
+        if (userData != null) {
+          setState(() {
+            _nameController.text = userData['name'] ?? '';
+            _emailController.text = userData['email'] ?? '';
+            _jobController.text = userData['job'] ?? '';
+            _departmentController.text = userData['department'] ?? '';
+            _notificationsEnabled = userData['notificationsEnabled'] ?? true;
+            _shareProgress = userData['shareProgress'] ?? false;
+          });
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao carregar dados: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -63,28 +98,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header com avatar
-            _buildHeader(),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: Column(
+                children: [
+                  // Header com avatar
+                  _buildHeader(),
 
-            // Informações pessoais
-            _buildPersonalInfo(),
+                  // Informações pessoais
+                  _buildPersonalInfo(),
 
-            // Estatísticas
-            _buildStats(),
+                  // Estatísticas
+                  _buildStats(),
 
-            // Configurações de privacidade
-            _buildPrivacySettings(),
+                  // Configurações de privacidade
+                  _buildPrivacySettings(),
 
-            // Ações
-            _buildActions(),
+                  // Ações
+                  _buildActions(),
 
-            const SizedBox(height: 32),
-          ],
-        ),
-      ),
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
     );
   }
 
@@ -476,14 +515,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void _saveProfile() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Perfil atualizado com sucesso!'),
-        backgroundColor: AppColors.success,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+  Future<void> _saveProfile() async {
+    try {
+      final currentUserId = AppFirebaseService.currentUser;
+      if (currentUserId != null) {
+        final userData = {
+          'name': _nameController.text.trim(),
+          'email': _emailController.text.trim(),
+          'job': _jobController.text.trim(),
+          'department': _departmentController.text.trim(),
+          'notificationsEnabled': _notificationsEnabled,
+          'shareProgress': _shareProgress,
+          'updatedAt': DateTime.now().toIso8601String(),
+        };
+
+        await AppFirebaseService.saveData('users', currentUserId, userData);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Perfil atualizado com sucesso!'),
+            backgroundColor: AppColors.success,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erro ao salvar perfil: $e'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   void _exportData() {
