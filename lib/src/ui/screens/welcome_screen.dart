@@ -378,51 +378,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(16),
-                                      border: Border.all(
-                                        color: AppColors.primary.withOpacity(
-                                          0.3,
-                                        ),
-                                        width: 1.5,
-                                      ),
-                                    ),
-                                    child: OutlinedButton(
-                                      onPressed: () {
-                                        print(
-                                          'Botão Explorar sem conta pressionado',
-                                        );
-                                        Navigator.pushNamed(context, '/main');
-                                      },
-                                      style: OutlinedButton.styleFrom(
-                                        foregroundColor: AppColors.primary,
-                                        minimumSize: const Size(
-                                          double.infinity,
-                                          56,
-                                        ),
-                                        side: BorderSide(
-                                          color: AppColors.primary.withOpacity(
-                                            0.3,
-                                          ),
-                                          width: 1.5,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            16,
-                                          ),
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        'Explorar sem conta',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),

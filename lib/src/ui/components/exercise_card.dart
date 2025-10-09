@@ -6,7 +6,12 @@ class ExerciseCard extends StatelessWidget {
   final String subtitle;
   final VoidCallback onPlay;
 
-  const ExerciseCard({super.key, required this.title, required this.subtitle, required this.onPlay});
+  const ExerciseCard({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    required this.onPlay,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +21,14 @@ class ExerciseCard extends StatelessWidget {
           const CircleAvatar(radius: 26, child: Icon(Icons.play_arrow)),
           const SizedBox(width: 12),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text(title, style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 4),
-              Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
-            ]),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
+              ],
+            ),
           ),
           ElevatedButton(onPressed: onPlay, child: const Text('Assistir')),
         ],

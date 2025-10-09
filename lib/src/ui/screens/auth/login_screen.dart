@@ -130,17 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                   child: const Text('Não tem conta? Cadastre-se'),
                 ),
-
-                // Botão para continuar sem login (desenvolvimento)
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/main');
-                  },
-                  child: const Text(
-                    'Continuar sem login (Desenvolvimento)',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
               ],
             ),
           ),
